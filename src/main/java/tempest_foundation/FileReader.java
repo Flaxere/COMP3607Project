@@ -26,22 +26,31 @@ import java.nio.file.Paths;
 import java.util.zip.ZipEntry;
 import java.util.Map;
 
-import org.apache.pdfbox.pdmodel.PDPage;
+//import org.apache.pdfbox.pdmodel.PDPage;
  
 
+/**
+    Class focused on unzipping and reading files and its content.
+*/
+public class FileReader {
 
-public class FileReader{
     private String filePath = "..\\comp3607project\\sample.zip";
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
-    private int hasSubmissions;
+    //private int hasSubmissions;
     private Map<String,ArrayList<String>> classMethods;
 
     public FileReader(){
+
         classMethods = new HashMap<>();
     }
     
-    public void readFiles() throws IOException{
+    /**
+        Unzips and reads the files within the given directory specified globally in the FileReader class
+        @see FileReader
+    */
+    public void readFiles() throws IOException {
+
         unzip(filePath, unzippedFilePath);
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
         if(submissionPaths.size()== 0)
@@ -97,26 +106,26 @@ public class FileReader{
                     } 
                 }
             }
-        }  
+        }
+
         System.out.println(classMethods);    
     }
      /**
-Strips the preceding filePath from the fileName
-@param fname The original string that contains the filepath
-@return The updated string without the filepath
-
-*/
+        Strips the preceding filePath from the fileName
+        @param fname The original string that contains the filepath
+        @return The updated string without the filepath
+    */
     private String getPlainName(String fname){
         return fname.substring(fname.lastIndexOf("\\")+1,fname.lastIndexOf("."));
     }
 
      /**
-This function is used to keep track of if the supplied line is in a paticular method/ class by returning 
-@param line The line that will be scanned for a bracket
-@return 
-
-*/
+        This function is used to keep track of if the supplied line is in a paticular method/ class by returning 
+        @param line The line that will be scanned for a bracket
+        @return 
+    */
     private int bracketCounter(String line){
+
         if(line.lastIndexOf("{")!=-1 &&line.lastIndexOf("}")!=-1 )
             return 0;
         if(line.lastIndexOf("{")!=-1)
@@ -133,6 +142,11 @@ This function is used to keep track of if the supplied line is in a paticular me
     //     return true;
     // }
 
+    /**
+        Gets the paths of all of the files listed within a zip file 
+        @param path The line that will be scanned for a bracket
+        @return A list of the filtered paths
+    */
     public static List<Path> listFiles(Path path) throws IOException {
 
         List<Path> result;
@@ -141,16 +155,15 @@ This function is used to keep track of if the supplied line is in a paticular me
                     .collect(Collectors.toList());
         }
         return result;
-
     }
 
     /**
-Unzips the supplied file and stores its contents in the appropriate folder
-@param zipFile the file that will be unzipped
-@param destFolder the location that the extracted file will be stored in
-
-*/
+        Unzips the supplied file and stores its contents in the appropriate folder
+        @param zipFile the file that will be unzipped
+        @param destFolder the location that the extracted file will be stored in
+    */
     public static void unzip(String zipFile, String destFolder) throws IOException {
+
         try (ZipInputStream zis = new ZipInputStream(new FileInputStream(zipFile))) {
             ZipEntry entry;
             byte[] buffer = new byte[1024];
@@ -170,6 +183,4 @@ Unzips the supplied file and stores its contents in the appropriate folder
             }
         }
     }
-    
-
 }
