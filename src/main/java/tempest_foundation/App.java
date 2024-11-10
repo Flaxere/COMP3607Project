@@ -12,7 +12,7 @@ import com.itextpdf.text.DocumentException;
 
 import tempest_foundation.SubmissionElements.Submission;
 /**
- * Hello world!
+ * Hello Jura-Tempest Federation!
  *
  */
 public class App 
