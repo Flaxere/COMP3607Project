@@ -51,7 +51,7 @@ public class Variable {
                 return tempStrArr[1+skipCount];
             return tempStrArr[1+skipCount].substring(0, tempStrArr[1+skipCount].indexOf(";"));
         }else{
-            if(tempStrArr[2+skipCount].contains("="))
+            if(tempStrArr[2+skipCount].contains("="))//Todo: This condition works well, but earlier checks are required to prevent += from entering 
                 return tempStrArr[2+skipCount].substring(0, tempStrArr[2+skipCount].indexOf("="));
             if(!tempStrArr[2+skipCount].contains(";") ||!tempStrArr[2+skipCount].contains("=") )
                 return tempStrArr[2+skipCount];
@@ -83,7 +83,9 @@ public class Variable {
     }
 
     private static boolean hasExpression(String line){
-        if(line.equals("=") || line.equals("+=") || line.equals("-=") || line.equals("/=") || line.equals("*=") ||line.contains("%=") )
+        if(line.equals(""))
+            return false;
+        if(line.charAt(0) == '=' || line.charAt(0) == '+' || line.charAt(0) == '-'|| line.charAt(0) == '/'||line.charAt(0) == '*' || line.charAt(0) == '%' )
             return true;
         return false;
     }
