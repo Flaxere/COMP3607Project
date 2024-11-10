@@ -38,7 +38,7 @@ import tempest_foundation.SubmissionElements.*;
 public class FileReader {
 
     private String filePath = "..\\comp3607project\\sample.zip";
-    private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
+    private String unzippedFilePath = "..\\comp3607project\\Submissions\\";
     private List<Path> submissionPaths;
     //private int hasSubmissions;
     private Map<String,ArrayList<String>> classMethods;
@@ -62,9 +62,15 @@ public class FileReader {
         Map<String,ArrayList<String>> map;
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
         String studentID="temp";
-        for(Path p: submissionPaths){     
-            if(p.toString().lastIndexOf("816") != -1)
+        for(Path p: submissionPaths){
+            String currentFilePath = p.toString();
+            String fileSubmissionPath = "";
+            
+            if(p.toString().lastIndexOf("816") != -1) {
                 studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
+                fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
+                unzip(currentFilePath, fileSubmissionPath);
+            }
             Submission currSub = new Submission(studentID);
             try (ZipFile submission = new ZipFile(p.toString())) {
                 Enumeration<? extends ZipEntry> assignments = submission.entries(); 
