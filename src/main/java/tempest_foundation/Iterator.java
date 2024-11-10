@@ -1,9 +1,10 @@
 package tempest_foundation;
 
-import java.io.InputStream;
+import java.util.Scanner;
+
 
 public interface Iterator {
     
-    InputStream next();
+    Scanner next();
     boolean hasNext();
 }
