@@ -2,7 +2,6 @@ package tempest_foundation.ClassElements;
 
 import java.util.ArrayList;
 import java.util.Arrays;
-
 public class Variable {
     private String type;
     private Visibility accessModifier;
@@ -27,7 +26,7 @@ public class Variable {
 
     public static String assignName(String line){//TODO: Account for multiple variables on the same line being separated by a ,
         String[] tempStrArr = line.trim().split("[\\s\\s*,\\s*]"); 
-        if(nonVariable(line) || tempStrArr.length <=1 || tempStrArr[0].contains("=") || hasExpression(tempStrArr[1]))
+        if(nonVariable(line) || tempStrArr.length <=1 || tempStrArr[0].contains("=") || hasExpression(tempStrArr[1]) || isKeyword(tempStrArr[0]))
             return "0nonVariable";
         boolean[] tests = {false, false};
         int skipCount=0;
@@ -98,6 +97,19 @@ public class Variable {
         return false;
     }
     
+    private static boolean isKeyword(String line){
+        
+        if(line.indexOf("do")==0||line.indexOf("while")==0||line.indexOf("for")==0||
+        line.indexOf("catch")==0||line.indexOf("case")==0||line.indexOf("class")==0||
+        line.indexOf("interface")==0||line.indexOf("throw")==0||line.indexOf("package")==0||
+        line.indexOf("else")==0||line.indexOf("try")==0||line.indexOf("finally")==0||
+        line.indexOf("break")==0|| line.indexOf("if")==0||line.indexOf("this")==0)
+            return true;
+        return false;
+    }
+
+    
+    
 
     public static Visibility assignVisibility(String line){
         if(line.contains("private"))
@@ -160,6 +172,7 @@ public class Variable {
         // tempString = tempString.substring(0,tempString.indexOf(" ")).trim();
         // return tempString;
     }
+
 
     public String getName(){return this.variableName;};
     public String getType(){return this.type;};

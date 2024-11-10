@@ -18,6 +18,12 @@ public class ClassDetails extends MarkSnippet implements ClassE{//TODO: THis is 
         functions = new ArrayList<>();
     }
 
+    public ClassDetails(String className,ArrayList<Variable> variables,ArrayList<Function> functions ){
+        this.className = className;
+        this.variables = variables;
+        this.functions = functions;
+    }
+
 
     public void addFunction(Function f){
         functions.add(f);
@@ -79,5 +85,12 @@ public class ClassDetails extends MarkSnippet implements ClassE{//TODO: THis is 
     }
    
 
+    public String toString(){
+        String str = getClassName() + ":\n";
+
+        for(Variable v:variables)
+            str +=v + "\n";
+        return str;
+    }
 
 }

@@ -21,13 +21,16 @@ public class App
     {
         
         Map<String,Map<String,ArrayList<String>>> submissionListing= new HashMap<>();
+
         FileReader f = new FileReader(submissionListing);
        
         DocumentGenerator d = new DocumentGenerator();
         d.createDocument();
         ArrayList<Submission> submissions = new ArrayList<>();
         f.readFiles(submissions);
-        System.out.println(submissions.get(1));
-        // System.out.println(submissionListing.get("816035980").get("public class ChatBot{"));
+        for(Submission s: submissions){
+            System.out.println(s);
+        }
+        // System.out.println(submissions.get(2) + "----> " + submissions.get(2).getClasses());
     }
 }

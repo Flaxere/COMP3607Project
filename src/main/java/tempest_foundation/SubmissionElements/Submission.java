@@ -26,7 +26,7 @@ public class Submission {
     public int getNumClasses(){return classes.size();}
 
     public String toString(){
-        return studentID + " ---- " + getNumClasses();
+        return "Student " + studentID + " - " + getNumClasses() + " Classes\t=>" + getClasses() ;
     }
     
 }

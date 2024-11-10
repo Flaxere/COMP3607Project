@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.io.InputStream;
+import java.lang.classfile.ClassElement;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -43,6 +44,7 @@ public class FileReader {
     private Map<String,ArrayList<String>> classMethods;
     private Map<String,Map<String,ArrayList<String>>> submissionListing;
     private boolean sLineFunc;
+    private ClassDetails tempClass;
 
     public FileReader(Map<String,Map<String,ArrayList<String>>> submissionListing){
 
@@ -73,9 +75,10 @@ public class FileReader {
                     try (InputStream inputStream = submission.getInputStream(submissionZip)) {
                         Scanner scanner = new Scanner(inputStream); {
                             if(submissionZip.getName().contains(".java")){
-                                ClassDetails tempClass= null;
-                                readAssigment(tempClass,scanner); 
-                                currSub.addClass(tempClass);
+                                readAssigment(scanner); 
+                                currSub.addClass(new ClassDetails(tempClass.getClassName(),tempClass.getVariables(),tempClass.getFunctions()));
+                                
+
                             }       
                         }
                     } 
@@ -86,13 +89,12 @@ public class FileReader {
                 System.out.println("ZipException => " + zExc.getMessage());
             }
             studentSubmissions.add(currSub);
-            System.out.println(studentSubmissions);
         }
 
         // System.out.println(submissionListing.get("816035980"));    
     }
 
-    private void readAssigment(ClassDetails tempClass,Scanner scanner){{
+    private void readAssigment(Scanner scanner){{
         ArrayList<String> fileContents = new ArrayList<>(); 
         tempClass = null;
         while (scanner.hasNextLine()) {
@@ -130,17 +132,12 @@ public class FileReader {
                     tempFunction = null;
                 }
                 
-                // if (tempClass!=null){
-                //     System.out.println(tempClass.getClassName());
-                //     System.out.println(tempClass.getVariables());
-                    
-                // }  
+              
             }
             
                 
             fileContents.add(line);
         } 
-        
         scanner.close();
 
 
