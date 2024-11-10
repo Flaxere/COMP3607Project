@@ -17,7 +17,7 @@ import tempest_foundation.SubmissionElements.Submission;
  */
 public class App 
 { 
-    public static void main( String[] args ) throws IOException, DocumentException
+    public static void main( String[] args ) throws IOException, DocumentException//TOdo: Account for abstract classes when reading the file
     {
         
         Map<String,Map<String,ArrayList<String>>> submissionListing= new HashMap<>();
@@ -25,8 +25,9 @@ public class App
        
         DocumentGenerator d = new DocumentGenerator();
         d.createDocument();
-
-        f.readFiles(new ArrayList<Submission>());
+        ArrayList<Submission> submissions = new ArrayList<>();
+        f.readFiles(submissions);
+        System.out.println(submissions.get(1));
         // System.out.println(submissionListing.get("816035980").get("public class ChatBot{"));
     }
 }

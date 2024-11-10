@@ -8,6 +8,7 @@ public class Submission {
 
     public Submission(String studentID){
         this.studentID = studentID;
+        this.classes = new ArrayList<>();
     }
     public Submission(String studentID, ArrayList<ClassDetails> classes){
         this.studentID = studentID;
@@ -24,5 +25,8 @@ public class Submission {
 
     public int getNumClasses(){return classes.size();}
 
+    public String toString(){
+        return studentID + " ---- " + getNumClasses();
+    }
     
 }

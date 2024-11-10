@@ -87,4 +87,8 @@ public class Function extends MarkSnippet implements ClassE {
         return this.functionContent;
     }
 
+    public String toString(){
+        return functionName;
+    }
+
 }
