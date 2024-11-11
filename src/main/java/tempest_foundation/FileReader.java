@@ -90,6 +90,7 @@ public class FileReader {
                 } catch (IOException e) {
                     System.out.println("IOException: " + e.getMessage());
                 }
+                
                 studentSubmissions.add(currSub);
             }
         }
