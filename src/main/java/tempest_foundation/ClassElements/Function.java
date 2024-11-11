@@ -90,5 +90,23 @@ public class Function extends MarkSnippet implements ClassE {
     public String toString(){
         return functionName;
     }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof  Function) {
+            Function f = (Function) obj;
+            if(f.getFunctionName().equals(this.getFunctionName()) && f.getAccessModifier().equals(this.getAccessModifier())) {
+                for (Variable p:f.parameters) {
+                    int expectedParameter = f.parameters.indexOf(p);
+                    if (expectedParameter == -1) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+                
+      }
+        return false;
+   }
 
 }
