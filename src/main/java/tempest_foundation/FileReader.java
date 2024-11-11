@@ -48,17 +48,12 @@ public class FileReader {
     private boolean sLineFunc;
     private ClassDetails tempClass;
 
-    public FileReader(Map<String,Map<String,ArrayList<String>>> submissionListing){
-        this.submissionListing = submissionListing;
-    }
-    
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
         @see FileReader 
     */
     public void readFiles(ArrayList<Submission> studentSubmissions) throws IOException {
         unzip(filePath, unzippedFilePath);
-        Map<String,ArrayList<String>> map;
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
         String studentID="temp";
 
@@ -90,7 +85,7 @@ public class FileReader {
                 } catch (IOException e) {
                     System.out.println("IOException: " + e.getMessage());
                 }
-                
+
                 studentSubmissions.add(currSub);
             }
         }
@@ -98,6 +93,7 @@ public class FileReader {
         File oldZipFolder = new File(unzippedFilePath);
         FileUtils.deleteDirectory(oldZipFolder);
     }
+
 
     /**
         Reads through the assignment, maintaining awareness of class and function content
@@ -146,6 +142,7 @@ public class FileReader {
         scanner.close();
     }
 
+
     /**
         Reads the function details within a class
         @param fileContents code within the file
@@ -180,6 +177,7 @@ public class FileReader {
         return tempFunction;
     }
 
+
     /**
         This function is used to keep track of if the supplied line is in a paticular method/ class by returning 
         @param line The line that will be scanned for a bracket
@@ -203,6 +201,7 @@ public class FileReader {
         return 0;
     }
 
+
     /**
         Gets the next non empty line whilst reading
         @param scanner The line that will be scanned for a bracket
@@ -222,6 +221,7 @@ public class FileReader {
 
         return "";
     }
+
 
     /**
         Gets the paths of all of the files listed within a zip file 
@@ -243,6 +243,7 @@ public class FileReader {
         return result;
     }
 
+    
     /**
         Unzips the supplied file and stores its contents in the appropriate folder
         @param zipFile the file that will be unzipped
