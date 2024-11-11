@@ -87,6 +87,16 @@ public class Function extends MarkSnippet implements ClassE {
         return this.functionContent;
     }
 
+    public Boolean hasVariable(Variable v){
+        for(Variable var:variables){
+            if(var.equals(v)){
+                return true;
+            }
+                
+        }
+        return false;
+    }
+
     public String toString(){
         return functionName;
     }

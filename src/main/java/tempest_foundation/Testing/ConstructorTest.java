@@ -7,6 +7,7 @@ import java.util.ArrayList;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
+import tempest_foundation.ClassElements.Variable;
 
 public class ConstructorTest implements Test{
 
@@ -32,7 +33,7 @@ public class ConstructorTest implements Test{
             if (expectedFunc != 1){
                 ArrayList<String> content = currentFunction.getContent();
                 for (String data:content) {
-                    if (data.contains("ChatGPT-3.5") && data.contains("chatBotName")) {
+                    if (data.contains("ChatGPT-3.5") && data.contains("chatBotName") && currentFunction.hasVariable(new Variable("chatBotName","String"))) {
                         inTesting.addGrade(1.0);
                     } else {
                         inTesting.addGrade(0);
