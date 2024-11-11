@@ -1,5 +1,6 @@
 package tempest_foundation.ClassElements;
 import java.util.ArrayList;
+
 import tempest_foundation.SubmissionElements.MarkSnippet;
 public class Function extends MarkSnippet implements ClassE {
     private Visibility accessModifier;
@@ -9,6 +10,7 @@ public class Function extends MarkSnippet implements ClassE {
     private ArrayList<String> functionContent;
     private boolean constructor;
     private String returnType;
+    
     
 
     public Function(String functionName, Visibility accessModifier){
@@ -25,8 +27,36 @@ public class Function extends MarkSnippet implements ClassE {
     //     this.functionName = functionName;
     //     this.variables = variables;
     // }
+   
 
-    
+        public void processParameterString(String line) {
+            String strBetweenBrackets = null;
+            int angleBracketCounter = 0;
+            int startIndex = line.indexOf('(');
+            int endIndex = line.indexOf(')');
+            strBetweenBrackets = line.substring(startIndex + 1, endIndex);
+            String[] tempStrArr = strBetweenBrackets.split("\"(?<=\\\\s)|(?=,)|(?<=,)|(?=\\\\s)\"");
+            angleBracketCounter = angleCounter(strBetweenBrackets);
+            int i = 0;
+            while(i<tempStrArr.length){
+                // index 0 would be type
+                //index 1 would be 
+                i++;
+            }
+
+        }
+
+        private int angleCounter(String line){
+
+            if(line.contains("<") && line.contains(">") ){
+                return 0;
+            }  
+            else if(line.contains("<"))
+                return 1;
+        else if(line.contains(">"))
+                return -1;
+            return 0;
+        }
 
 
     public void setGrade(int grade){
@@ -90,5 +120,4 @@ public class Function extends MarkSnippet implements ClassE {
     public String toString(){
         return functionName;
     }
-
 }
