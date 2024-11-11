@@ -19,10 +19,7 @@ public class App
 { 
     public static void main( String[] args ) throws IOException, DocumentException//TOdo: Account for abstract classes when reading the file
     {
-        
-        Map<String,Map<String,ArrayList<String>>> submissionListing= new HashMap<>();
-
-        FileReader f = new FileReader(submissionListing);
+        FileReader f = new FileReader();
        
         DocumentGenerator d = new DocumentGenerator();
         d.createDocument();

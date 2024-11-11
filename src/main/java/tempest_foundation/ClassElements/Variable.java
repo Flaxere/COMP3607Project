@@ -34,7 +34,7 @@ public class Variable {
             tests[0] = true;
         if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
             tests[1] = true;
-        
+       
         for(boolean t: tests){
             if(t)
                 skipCount++;
@@ -86,6 +86,7 @@ public class Variable {
         if(line.charAt(0) == '=' || line.charAt(0) == '+' || line.charAt(0) == '-'|| line.charAt(0) == '/'||line.charAt(0) == '*' || line.charAt(0) == '%' )
             return true;
         return false;
+        
     }
     
     private static boolean nonVariable(String line){
@@ -127,13 +128,15 @@ public class Variable {
 
 
             String[] tempStrArr = line.trim().split("[,\\.\\s\\s*,\\s*]"); 
-        boolean[] tests = {false, false};
+        boolean[] tests = {false, false, false};
         int skipCount=0;
         // String tempString = new String(line.trim());
         if(Arrays.stream(tempStrArr).anyMatch("static"::equals))
             tests[0] = true;
         if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
             tests[1] = true;
+        if(Arrays.stream(tempStrArr).anyMatch("transient"::equals))
+            tests[2] = true;
         
         for(boolean t: tests){
             if(t)
