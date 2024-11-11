@@ -1,6 +1,5 @@
 package tempest_foundation.ClassElements;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 public class Variable {
     private String type;
@@ -181,5 +180,14 @@ public class Variable {
     public String toString(){
         return getVisibility() +" " + getType()+ " " + getName() ;
     }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof  Variable) {
+            Variable v = (Variable) obj;
+            if(v.getName().equals(this.getName()) && v.getType().equals(this.getType()))
+                   return true;
+      }
+        return false;
+   }
 
 }

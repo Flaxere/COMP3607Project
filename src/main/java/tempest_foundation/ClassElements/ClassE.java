@@ -8,6 +8,9 @@ public interface ClassE {
     void setContent(ArrayList<String> content);
     void addContent(String content);
     ArrayList<String> getContent();
+
+    ArrayList<Variable> getVariables();
+    
     
 }
 
