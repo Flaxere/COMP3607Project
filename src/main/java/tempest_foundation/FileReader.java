@@ -11,8 +11,12 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+
+import org.apache.commons.io.FileUtils;
+
 import java.util.List;
 import java.util.ArrayList;
+import java.util.Comparator;
 
 //PDf imports
 
@@ -40,8 +44,6 @@ public class FileReader {
     private String filePath = "..\\comp3607project\\sample.zip";
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
-    //private int hasSubmissions;
-    // private Map<String,ArrayList<String>> classMethods;
     private Map<String,Map<String,ArrayList<String>>> submissionListing;
     private boolean sLineFunc;
     private ClassDetails tempClass;
@@ -54,12 +56,12 @@ public class FileReader {
         Unzips and reads the files within the given directory specified globally in the FileReader class
         @see FileReader 
     */
-
     public void readFiles(ArrayList<Submission> studentSubmissions) throws IOException {
         unzip(filePath, unzippedFilePath);
         Map<String,ArrayList<String>> map;
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
         String studentID="temp";
+
         for(Path p: submissionPaths){
             String currentFilePath = p.toString();
             String fileSubmissionPath = "";
@@ -90,11 +92,18 @@ public class FileReader {
                 }
                 studentSubmissions.add(currSub);
             }
-           
         }
+
+        File oldZipFolder = new File(unzippedFilePath);
+        FileUtils.deleteDirectory(oldZipFolder);
     }
 
-    private void readAssigment(Scanner scanner){{
+    /**
+        Reads through the assignment, maintaining awareness of class and function content
+        @param scanner the scanner that keeps track of the current reading
+    */
+    private void readAssigment(Scanner scanner) {
+
         ArrayList<String> fileContents = new ArrayList<>(); 
         tempClass = null;
         while (scanner.hasNextLine()) {
@@ -130,20 +139,23 @@ public class FileReader {
                     sLineFunc = false;
                     tempFunction = null;
                 }
-                
-              
-            }
-            
-                
+            }   
             fileContents.add(line);
-        } 
+        }
         scanner.close();
-
-
-      }
     }
 
-    private Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass){
+    /**
+        Reads the function details within a class
+        @param fileContents code within the file
+        @param bracketCount used to keep track of the current open/closed bracket
+        @param scanner the scanner used to iterate through the code
+        @param line current line being read
+        @param tempClass the class containing the function
+        @return the function containing it's content
+    */
+    private Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass) {
+
         Function tempFunction = null;
         String funcName =line;
         while(bracketCount[0]>1){
@@ -154,32 +166,25 @@ public class FileReader {
             }
             else{
                 tempFunction.addVariable(line);
-                // System.out.println(tempFunction.getVariables());
                 tempFunction.addContent(line);  
                 line = nextNonEmptyLine(scanner);
                 if(line.contains("{") || line.contains("}"))
                     bracketCount[0] += bracketCounter(line,tempClass,tempFunction) ;
             }
         }
+
         if(tempFunction!=null)
             tempFunction.addContent(line);
+
         return tempFunction;
     }
-     /**
-        Strips the preceding filePath from the fileName
-        @param fname The original string that contains the filepath
-        @return The updated string without the filepath
-    */
-    private String getPlainName(String fname){
-        return fname.substring(fname.lastIndexOf("\\")+1,fname.lastIndexOf("."));
-    }
 
-     /**
+    /**
         This function is used to keep track of if the supplied line is in a paticular method/ class by returning 
         @param line The line that will be scanned for a bracket
         @return 
     */
-    private int bracketCounter(String line,ClassDetails classref,Function funcRef){
+    private int bracketCounter(String line,ClassDetails classref,Function funcRef) {
 
         if(line.contains("{") &&line.contains("}") ){
             // stringRef[0]+=line  + "\n";
@@ -197,8 +202,13 @@ public class FileReader {
         return 0;
     }
 
+    /**
+        Gets the next non empty line whilst reading
+        @param scanner The line that will be scanned for a bracket
+        @return The non empty string if found
+    */
+    private String nextNonEmptyLine(Scanner scanner) {
 
-    private String nextNonEmptyLine(Scanner scanner){
         String nEmptyString;
         if(scanner.hasNextLine()){
             nEmptyString = scanner.nextLine();
@@ -207,11 +217,10 @@ public class FileReader {
                 nEmptyString = scanner.nextLine();
             }
             return nEmptyString;
-        } 
+        }
+
         return "";
     }
-
-   
 
     /**
         Gets the paths of all of the files listed within a zip file 
@@ -219,6 +228,7 @@ public class FileReader {
         @return A list of the filtered paths
     */
     public List<Path> listFiles(Path path) throws IOException {
+
         ArrayList<Integer> removeList = new ArrayList<>();
         List<Path> result;
        
@@ -226,13 +236,7 @@ public class FileReader {
             result = walk.filter(Files::isRegularFile )
                     .collect(Collectors.toList());
         }
-        // for (int i=result.size()-1;i >=0;i--) {
-        //     System.out.println(result.get(i).toString());
-        //     Path r = result.get(i);
-        //     String name = getPlainName(result.get(i).toString());
-        //     if(getPlainName(result.get(i).toString()).matches("Jared_DeFour_816[0-9]{6}_A1") == false)
-        //         result.remove(i);
-        // }
+        
         if(result.size()==0)
             System.out.print("No submissions exist in this directory");
         return result;
