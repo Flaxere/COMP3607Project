@@ -44,7 +44,6 @@ public class FileReader {
     private String filePath = "..\\comp3607project\\sample.zip";
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
-    private Map<String,Map<String,ArrayList<String>>> submissionListing;
     private boolean sLineFunc;
     private ClassDetails tempClass;
 
