@@ -10,7 +10,10 @@ import org.apache.pdfbox.pdmodel.PDDocument;
 
 import com.itextpdf.text.DocumentException;
 
+import tempest_foundation.ClassElements.Variable;
+import tempest_foundation.ClassElements.Visibility;
 import tempest_foundation.SubmissionElements.Submission;
+import tempest_foundation.Testing.VariableTest;
 /**
  * Hello Jura-Tempest Federation!
  *
@@ -25,9 +28,17 @@ public class App
         d.createDocument();
         ArrayList<Submission> submissions = new ArrayList<>();
         f.readFiles(submissions);
-        for(Submission s: submissions){
-            System.out.println(s);
-        }
-        // System.out.println(submissions.get(2) + "----> " + submissions.get(2).getClasses());
+   
+        ArrayList<Variable> var = new ArrayList<>();
+        var.add(new Variable("chatBotName", "String", Visibility.PROTECTED));
+        var.add(new Variable("numResponsesGenerated", "int", Visibility.PRIVATE));
+        var.add(new Variable("messageLimit", "int" ,Visibility.PRIVATE));
+        var.add(new Variable("messageNumber", "int", Visibility.PRIVATE));
+
+        Submission s =submissions.get(2);
+        VariableTest vTest = new VariableTest(var, s.getClass(0));
+        vTest.executeTest();
+     
+       
     }
 }

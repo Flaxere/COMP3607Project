@@ -8,6 +8,9 @@ public abstract class MarkSnippet implements ClassE {
     protected double grade=0;
     protected ArrayList<String> comment;
 
+    public  MarkSnippet(){
+        this.comment = new ArrayList<>();
+    }
     public void addGrade(double grade){
         this.grade+=grade;
 

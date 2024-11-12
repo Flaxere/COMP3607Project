@@ -5,7 +5,7 @@ import java.util.ArrayList;
 import tempest_foundation.SubmissionElements.MarkSnippet;
 
 
-public class ClassDetails extends MarkSnippet implements ClassE{//TODO: THis is the CLASS class
+public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
     private String className;
     private ArrayList<Variable> variables;
     private ArrayList<String> classContent;
@@ -13,9 +13,11 @@ public class ClassDetails extends MarkSnippet implements ClassE{//TODO: THis is 
 
 
     public ClassDetails(String className){
+        super();
         this.className = className;
         variables = new ArrayList<>();
         functions = new ArrayList<>();
+        
     }
 
     public ClassDetails(String className,ArrayList<Variable> variables,ArrayList<Function> functions ){
@@ -88,8 +90,8 @@ public class ClassDetails extends MarkSnippet implements ClassE{//TODO: THis is 
     public String toString(){
         String str = getClassName() + ":\n";
 
-        for(Variable v:variables)
-            str +=v + "\n";
+        for(Function f:functions)
+            str +=f + "\n";
         return str;
     }
 

@@ -51,32 +51,11 @@ public class Variable {
         }else{
             if(tempStrArr[2+skipCount].contains("="))//Todo: This condition works well, but earlier checks are required to prevent += from entering 
                 return tempStrArr[2+skipCount].substring(0, tempStrArr[2+skipCount].indexOf("="));
-            if(!tempStrArr[2+skipCount].contains(";") ||!tempStrArr[2+skipCount].contains("=") )
+            if(!tempStrArr[2+skipCount].contains(";") &&!tempStrArr[2+skipCount].contains("=") )
                 return tempStrArr[2+skipCount];
             return tempStrArr[2+skipCount].substring(0, tempStrArr[2+skipCount].indexOf(";"));
         }
 
-        
-           
-       
-        // if(tempString.contains("static"))
-        //     tempString = tempString.substring(tempString.indexOf("static") + 6,tempString.length()).trim();
-        // else{
-        //     if(v==Visibility.NONE)
-        //         return tempString.substring(0 , tempString.indexOf(" "));
-        //     tempString = tempString.substring(assignVisibility(line).name().length(),tempString.length()).trim();
-        // }
-            
-        // tempString = tempString.substring(tempString.indexOf(" "), tempString.length()).trim();
-
-        // if(tempString.contains("=")){
-            
-        //     tempString =  tempString.substring(0, tempString.indexOf("=")).trim();
-        //     if(tempString.equals(""))
-        //         return "0nonVariable";
-        //     return tempString;
-        // }
-        // return tempString.substring(0, tempString.indexOf(";")).trim();
 
     }
 
@@ -124,10 +103,7 @@ public class Variable {
     public static String assignType(String line){
         if(line.contains(";")!=true || line.contains("return")==true)
             return "0nonVariable";
-        
-
-
-            String[] tempStrArr = line.trim().split("[,\\.\\s\\s*,\\s*]"); 
+        String[] tempStrArr = line.trim().split("[,\\.\\s\\s*,\\s*]"); 
         boolean[] tests = {false, false, false};
         int skipCount=0;
         // String tempString = new String(line.trim());

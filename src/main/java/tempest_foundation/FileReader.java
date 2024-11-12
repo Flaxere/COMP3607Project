@@ -117,6 +117,7 @@ public class FileReader {
                         tempClass.addFunction(tempFunction);
                                   
                     }
+                    fileContents.add(line);
                     line = nextNonEmptyLine(scanner);
                     if(line.contains("{") || line.contains("}"))
                         classCurlyBrackets[0] += bracketCounter(line, tempClass,tempFunction);
@@ -147,11 +148,13 @@ public class FileReader {
 
         Function tempFunction = null;
         String funcName =line;
+        line=line.trim();
         while(bracketCount[0]>1){
             if (tempFunction==null){
-                if(line.trim().indexOf(0)=='{')
-                    funcName = fileContents.get(fileContents.size()-1);
-                tempFunction = new Function(funcName,Function.assignVisibility(line));
+                if(line.indexOf("{")==0)
+                    funcName = fileContents.get(fileContents.size()-1) + line;
+                tempFunction = new Function();
+                tempFunction.processFunctionDetails(funcName);
             }
             else{
                 tempFunction.addVariable(line);
@@ -178,11 +181,14 @@ public class FileReader {
 
         if(line.contains("{") &&line.contains("}") ){
             // stringRef[0]+=line  + "\n";
-            if(funcRef==null)
-                funcRef = new Function(Function.assignName(line), Function.assignVisibility(line));
+            if(funcRef==null){
+                funcRef = new Function();
+                funcRef.processFunctionDetails(line);
+            }
             sLineFunc = true;
             //Todo: Make this account for a long program on one line, splitting up into separate lines
             funcRef.addContent(line);
+            classref.addFunction(funcRef);
             return 0;
         }  
         else if(line.contains("{"))
