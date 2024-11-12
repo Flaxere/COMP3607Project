@@ -115,12 +115,14 @@ public class FileReader {
                     if(tempFunction!=null){
                         tempFunction.addContent(line);
                         tempClass.addFunction(tempFunction);
-                                  
+              
                     }
                     fileContents.add(line);
                     line = nextNonEmptyLine(scanner);
-                    if(line.contains("{") || line.contains("}"))
+                    if(line.contains("{") || line.contains("}")){
+                        tempFunction=null;
                         classCurlyBrackets[0] += bracketCounter(line, tempClass,tempFunction);
+                    }
                     if(!sLineFunc && classCurlyBrackets[0] < 2)
                         tempClass.addVariable(line);
                     if(classCurlyBrackets[0]==0)

@@ -222,10 +222,14 @@ public class Function extends MarkSnippet {
             if(t)
                 skipCount++;
         }
-        int i=1;
+        int spaceCount =0;;
+        while(tempStrArr[spaceCount+1].equals(""))
+            spaceCount++;
+                        
+        int i=1 + spaceCount;
         String returnTypeString =tempStrArr[i + skipCount];
         int bracketCount = bracketCounter(returnTypeString);
-        while(bracketCount>0){
+        while(bracketCount>0 && returnTypeString.equals("")){
             i++;
             returnTypeString +=bracketCounter(tempStrArr[i + skipCount]);
             bracketCount = bracketCounter(returnTypeString);
