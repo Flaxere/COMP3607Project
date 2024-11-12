@@ -19,8 +19,8 @@ import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.zip.ZipFile;
 import java.util.zip.ZipInputStream;
+import org.apache.commons.io.FileUtils;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
@@ -36,61 +36,62 @@ public class FileReader {
     private String filePath = "..\\comp3607project\\sample.zip";
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
-    //private int hasSubmissions;
-    private Map<String,ArrayList<String>> classMethods;
-    private Map<String,Map<String,ArrayList<String>>> submissionListing;
     private boolean sLineFunc;
     private ClassDetails tempClass;
 
-    public FileReader(Map<String,Map<String,ArrayList<String>>> submissionListing){
-
-        classMethods = new HashMap<>();
-        this.submissionListing = submissionListing;
-    }
-    
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
         @see FileReader 
     */
-
     public void readFiles(ArrayList<Submission> studentSubmissions) throws IOException {
         unzip(filePath, unzippedFilePath);
-        Map<String,ArrayList<String>> map;
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
         String studentID="temp";
-        for(Path p: submissionPaths){     
-            if(p.toString().lastIndexOf("816") != -1)
-                studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
-            Submission currSub = new Submission(studentID);
-            try (ZipFile submission = new ZipFile(p.toString())) {
-                Enumeration<? extends ZipEntry> assignments = submission.entries(); 
-                if (!assignments.hasMoreElements())
-                    System.out.println(getPlainName(submission.getName()) + " contains no files");
-                else while (assignments.hasMoreElements()) {
-                    ZipEntry submissionZip = assignments.nextElement();
-                    try (InputStream inputStream = submission.getInputStream(submissionZip)) {
-                        Scanner scanner = new Scanner(inputStream); {
-                            if(submissionZip.getName().contains(".java")){
-                                readAssigment(scanner); 
-                                currSub.addClass(new ClassDetails(tempClass.getClassName(),tempClass.getVariables(),tempClass.getFunctions()));
-                                
 
-                            }       
-                        }
-                    } 
-                }
-                classMethods.clear();
-                studentID = "temp";
-            }catch(ZipException zExc){
-                System.out.println("ZipException => " + zExc.getMessage());
+        for(Path p: submissionPaths){
+            String currentFilePath = p.toString();
+            String fileSubmissionPath = "";
+            
+            if(p.toString().lastIndexOf("816") != -1) {
+                studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
+                fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
+                unzip(currentFilePath, fileSubmissionPath);
             }
-            studentSubmissions.add(currSub);
+            if(fileSubmissionPath!=""){
+               
+                Submission currSub = new Submission(studentID);
+                try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
+                    paths
+                        .filter(Files::isRegularFile) 
+                        .filter(path -> path.toString().endsWith(".java")) 
+                        .forEach(path -> {
+                            try {
+                                Scanner scanner = new Scanner(path);
+                                readAssigment(scanner);
+                                currSub.addClass(new ClassDetails(tempClass.getClassName(),tempClass.getVariables(),tempClass.getFunctions()));
+                            } catch (IOException e) {
+                                System.out.println("Error reading file: " + path + " - " + e.getMessage());
+                            }
+                        });
+                } catch (IOException e) {
+                    System.out.println("IOException: " + e.getMessage());
+                }
+
+                studentSubmissions.add(currSub);
+            }
         }
 
-        // System.out.println(submissionListing.get("816035980"));    
+        File oldZipFolder = new File(unzippedFilePath);
+        FileUtils.deleteDirectory(oldZipFolder);
     }
 
-    private void readAssigment(Scanner scanner){{
+
+    /**
+        Reads through the assignment, maintaining awareness of class and function content
+        @param scanner the scanner that keeps track of the current reading
+    */
+    private void readAssigment(Scanner scanner) {
+
         ArrayList<String> fileContents = new ArrayList<>(); 
         tempClass = null;
         while (scanner.hasNextLine()) {
@@ -114,8 +115,7 @@ public class FileReader {
                     if(tempFunction!=null){
                         tempFunction.addContent(line);
                         tempClass.addFunction(tempFunction);
-                        
-                        
+                                  
                     }
                     line = nextNonEmptyLine(scanner);
                     if(line.contains("{") || line.contains("}"))
@@ -127,34 +127,54 @@ public class FileReader {
                     sLineFunc = false;
                     tempFunction = null;
                 }
-                
-              
-            }
-            
-                
+            }   
             fileContents.add(line);
-        } 
+        }
         scanner.close();
-
-
     }
 
-    }
-     /**
-        Strips the preceding filePath from the fileName
-        @param fname The original string that contains the filepath
-        @return The updated string without the filepath
+
+    /**
+        Reads the function details within a class
+        @param fileContents code within the file
+        @param bracketCount used to keep track of the current open/closed bracket
+        @param scanner the scanner used to iterate through the code
+        @param line current line being read
+        @param tempClass the class containing the function
+        @return the function containing it's content
     */
-    private String getPlainName(String fname){
-        return fname.substring(fname.lastIndexOf("\\")+1,fname.lastIndexOf("."));
+    private Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass) {
+
+        Function tempFunction = null;
+        String funcName =line;
+        while(bracketCount[0]>1){
+            if (tempFunction==null){
+                if(line.trim().indexOf(0)=='{')
+                    funcName = fileContents.get(fileContents.size()-1);
+                tempFunction = new Function(funcName,Function.assignVisibility(line));
+            }
+            else{
+                tempFunction.addVariable(line);
+                tempFunction.addContent(line);  
+                line = nextNonEmptyLine(scanner);
+                if(line.contains("{") || line.contains("}"))
+                    bracketCount[0] += bracketCounter(line,tempClass,tempFunction) ;
+            }
+        }
+
+        if(tempFunction!=null)
+            tempFunction.addContent(line);
+
+        return tempFunction;
     }
 
-     /**
+
+    /**
         This function is used to keep track of if the supplied line is in a paticular method/ class by returning 
         @param line The line that will be scanned for a bracket
         @return 
     */
-    private int bracketCounter(String line,ClassDetails classref,Function funcRef){
+    private int bracketCounter(String line,ClassDetails classref,Function funcRef) {
 
         if(line.contains("{") &&line.contains("}") ){
             // stringRef[0]+=line  + "\n";
@@ -173,7 +193,13 @@ public class FileReader {
     }
 
 
-    private String nextNonEmptyLine(Scanner scanner){
+    /**
+        Gets the next non empty line whilst reading
+        @param scanner The line that will be scanned for a bracket
+        @return The non empty string if found
+    */
+    private String nextNonEmptyLine(Scanner scanner) {
+
         String nEmptyString;
         if(scanner.hasNextLine()){
             nEmptyString = scanner.nextLine();
@@ -182,32 +208,11 @@ public class FileReader {
                 nEmptyString = scanner.nextLine();
             }
             return nEmptyString;
-        } 
+        }
+
         return "";
     }
 
-    private Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass){
-        Function tempFunction = null;
-        String funcName =line;
-        while(bracketCount[0]>1){
-            if (tempFunction==null){
-                if(line.trim().indexOf(0)=='{')
-                    funcName = fileContents.get(fileContents.size()-1);
-                tempFunction = new Function(funcName,Function.assignVisibility(line));
-            }
-            else{
-                tempFunction.addVariable(line);
-                // System.out.println(tempFunction.getVariables());
-                tempFunction.addContent(line);  
-                line = nextNonEmptyLine(scanner);
-                if(line.contains("{") || line.contains("}"))
-                    bracketCount[0] += bracketCounter(line,tempClass,tempFunction) ;
-            }
-        }
-        if(tempFunction!=null)
-            tempFunction.addContent(line);
-        return tempFunction;
-    }
 
     /**
         Gets the paths of all of the files listed within a zip file 
@@ -215,6 +220,7 @@ public class FileReader {
         @return A list of the filtered paths
     */
     public List<Path> listFiles(Path path) throws IOException {
+
         ArrayList<Integer> removeList = new ArrayList<>();
         List<Path> result;
        
@@ -222,18 +228,13 @@ public class FileReader {
             result = walk.filter(Files::isRegularFile )
                     .collect(Collectors.toList());
         }
-        // for (int i=result.size()-1;i >=0;i--) {
-        //     System.out.println(result.get(i).toString());
-        //     Path r = result.get(i);
-        //     String name = getPlainName(result.get(i).toString());
-        //     if(getPlainName(result.get(i).toString()).matches("Jared_DeFour_816[0-9]{6}_A1") == false)
-        //         result.remove(i);
-        // }
+        
         if(result.size()==0)
             System.out.print("No submissions exist in this directory");
         return result;
     }
 
+    
     /**
         Unzips the supplied file and stores its contents in the appropriate folder
         @param zipFile the file that will be unzipped
