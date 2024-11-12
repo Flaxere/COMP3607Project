@@ -3,32 +3,28 @@ package tempest_foundation;
 //Iteration imports
 import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.util.Scanner;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
-import java.util.zip.ZipFile;
-import java.util.zip.ZipInputStream;
-import java.util.List;
-import java.util.ArrayList;
-
-//PDf imports
-
-
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.io.InputStream;
-import java.lang.classfile.ClassElement;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
+import java.util.ArrayList;
+import java.util.Enumeration;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.Scanner;
+import java.util.stream.Collectors;
+import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipException;
-import java.util.Map;
-import tempest_foundation.ClassElements.*;
-import tempest_foundation.SubmissionElements.*;
+import java.util.zip.ZipFile;
+import java.util.zip.ZipInputStream;
+
+import tempest_foundation.ClassElements.ClassDetails;
+import tempest_foundation.ClassElements.Function;
+import tempest_foundation.SubmissionElements.Submission;
 //import org.apache.pdfbox.pdmodel.PDPage;
  
 
