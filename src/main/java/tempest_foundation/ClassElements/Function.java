@@ -116,6 +116,8 @@ public class Function extends MarkSnippet {
     public ArrayList<Variable> getVariables(){return variables;}
     public String getFunctionName(){return functionName;}
     public Visibility getAccessModifier(){return accessModifier;}
+    public String getReturnType(){return returnType;}
+
 
     public void setFunctionName(String functionName){this.functionName=functionName;}
     public void setFunctionType(String returnType){this.returnType=returnType;}
@@ -283,4 +285,14 @@ public class Function extends MarkSnippet {
         str+=")";
         return str;
     }
+
+    public boolean equals(Object obj) {
+        if (obj instanceof  Function) {
+            Function f = (Function) obj;
+            if(f.getFunctionName().equals(this.getFunctionName()) && f.getReturnType().equals(this.getReturnType()) 
+            && f.getAccessModifier().equals(this.getAccessModifier()))
+                   return true;
+      }
+        return false;
+   }
 }
