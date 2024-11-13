@@ -1,5 +1,8 @@
 package tempest_foundation.Testing;
 
+import java.util.ArrayList;
+import java.util.Optional;
+
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
 
@@ -23,24 +26,34 @@ public class AccessorTest implements Test {
 
     @Override
     public void executeTest() {
+
         int numTests = expectedFunction.getContent().size();
-        int currTests=0;
-         for(Function currentFunction:inTesting.getFunctions()){
-            if(numTests==currTests)
+        int currentTests = 0;
+
+        for (Function currentFunction: inTesting.getFunctions()) {
+            if(numTests == currentTests)
                 break;
-            if(expectedFunction.equals(currentFunction)){
-                currentFunction.addGrade(1.0);
-                for(String expectedString: expectedFunction.getContent()){
-                    for(String actualString:currentFunction.getContent() ){
-                        if(actualString.contains(expectedString.substring(0,expectedString.indexOf(";")))){
-                            currentFunction.addGrade(1.0);
-                            currTests++;
-                            break;
-                        }
-                    }  
-                }
-            }
-         }
-    }   
-    
+
+            Optional<Function> targetFunction = inTesting.getFunctions().stream()
+                .filter(var -> var.getContent() == currentFunction.getContent())
+                .findFirst();
+
+            targetFunction.ifPresent(var -> {
+
+                //Add mark if the accessor function prototype matches
+                if (expectedFunction.equals(var))
+                    currentFunction.addGrade(1.0);
+                else
+                    currentFunction.addComment(currentFunction.getFunctionName() + " did not contain the correct function prototype.");
+
+                //Add mark if the return statement matches
+                if (var.toString().contains(expectedFunction.toString()))
+                    currentFunction.addGrade(1.0);
+                else
+                    currentFunction.addComment(currentFunction.getFunctionName() + " did not return the correct value.");
+            });
+        }
+
+        System.out.println(inTesting.getGrade());
+    }
 }

@@ -44,14 +44,21 @@ public class App
         Submission s =submissions.get(2);
         VariableTest vTest = new VariableTest(var, s.getClass(0));
         vTest.executeTest();
+
         Function func = new Function();
         func.processFunctionDetails("public String getChatBotName()");
-        func.addContent("return chatBotName;");
+        func.addContent("return chatBotName ;");
+
         AccessorTest aTest = new AccessorTest(func);
         aTest.setClassDetails(s.getClass(0));
         aTest.executeTest();
-        
-     
-       
+
+        func = new Function();
+        func.processFunctionDetails("public int getNumResponsesGenerated()");
+        func.addContent("return numResponsesGenerated;");
+        aTest.setExpectedFunction(func);
+        aTest.executeTest();
+
+        System.out.println(s.getClass(0).getTotalGrade());
     }
 }

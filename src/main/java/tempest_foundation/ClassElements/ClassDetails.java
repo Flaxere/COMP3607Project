@@ -85,7 +85,16 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
 
         return newString.substring(newString.lastIndexOf(" "),newString.length());
     }
-   
+
+    public double getTotalGrade() {
+
+        double totalGrade = getGrade();
+
+        for (Function f: functions)
+            totalGrade += f.getGrade();
+
+        return totalGrade;
+    }
 
     public String toString(){
         String str = getClassName() + ":\n";
