@@ -177,6 +177,16 @@ public class Function extends MarkSnippet {
         return this.functionContent;
     }
 
+    public Boolean hasVariable(Variable v){
+        for(Variable var:variables){
+            if(var.equals(v)){
+                return true;
+            }
+                
+        }
+        return false;
+    }
+
     public String toString(){
         String str=accessModifier + " " +  returnType + " " + functionName + "(";
         for(Variable p:parameters)
@@ -184,6 +194,24 @@ public class Function extends MarkSnippet {
         str+=")";
         return str;
     }
+    
+    public boolean equals(Object obj) {
+        if (obj instanceof  Function) {
+            Function f = (Function) obj;
+            if(f.getFunctionName().equals(this.getFunctionName()) && f.getAccessModifier().equals(this.getAccessModifier())) {
+                for (Variable p:f.parameters) {
+                    int expectedParameter = f.parameters.indexOf(p);
+                    if (expectedParameter == -1) {
+                        return false;
+                    }
+                }
+                
+                return true;
+            }
+                
+      }
+        return false;
+   }
 
     public boolean equals(Object obj) {
         if (obj instanceof  Function) {
