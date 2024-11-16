@@ -119,7 +119,8 @@ public class FileReader {
                     }
                     fileContents.add(line);
                     line = nextNonEmptyLine(scanner);
-                    if(line.contains("{") || line.contains("}")){
+                  
+                    if((line.contains("{") || line.contains("}")) && !isComment(line)){
                         tempFunction=null;
                         classCurlyBrackets[0] += bracketCounter(line, tempClass,tempFunction);
                     }
@@ -134,6 +135,15 @@ public class FileReader {
             fileContents.add(line);
         }
         scanner.close();
+    }
+
+    private boolean isComment(String line){
+        line = line.trim();
+        if(line.indexOf("/")==0)
+            return true;
+        return false;
+
+
     }
 
 
@@ -209,16 +219,15 @@ public class FileReader {
     private String nextNonEmptyLine(Scanner scanner) {
 
         String nEmptyString;
-        if(scanner.hasNextLine()){
+        if(!scanner.hasNextLine()){
+            return "";
+        }  
+        nEmptyString = scanner.nextLine();
+        while(scanner.hasNextLine() && nEmptyString.trim().equals("")){
             nEmptyString = scanner.nextLine();
-        
-            while(nEmptyString.trim().equals("")){
-                nEmptyString = scanner.nextLine();
-            }
-            return nEmptyString;
         }
+        return nEmptyString;
 
-        return "";
     }
 
 
@@ -229,7 +238,6 @@ public class FileReader {
     */
     public List<Path> listFiles(Path path) throws IOException {
 
-        ArrayList<Integer> removeList = new ArrayList<>();
         List<Path> result;
        
         try (Stream<Path> walk = Files.walk(path)) {

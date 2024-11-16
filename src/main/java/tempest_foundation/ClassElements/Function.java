@@ -2,6 +2,7 @@ package tempest_foundation.ClassElements;
 import java.util.ArrayList;
 import java.util.Arrays;
 
+import tempest_foundation.BracketManager;
 import tempest_foundation.SubmissionElements.MarkSnippet;
 public class Function extends MarkSnippet {
     private Visibility accessModifier;
@@ -11,7 +12,7 @@ public class Function extends MarkSnippet {
     private ArrayList<String> functionContent;
     private boolean constructor;
     private String returnType;
-    private boolean isStatic;
+    // private boolean isStatic;
     
     
 
@@ -33,78 +34,38 @@ public class Function extends MarkSnippet {
        
     }
 
-    
-    // public Function(String functionName,ArrayList<Variable> variables ){
-    //     this.functionName = functionName;
-    //     this.variables = variables;
-    // }
-   
+    public void processParameterString(String line, char[] characterFilter ) {
+        String strBetweenBrackets = null;
+        strBetweenBrackets = line.substring( line.indexOf('(') + 1, line.indexOf(')'));
+        String[] tempStrArr = strBetweenBrackets.split("[\\s\\s*,\\s*]");
+        // char[] characterFilter = {'<','>','[',']'};
+        int i = 0;
 
-        public void processParameterString(String line) {
-            String strBetweenBrackets = null;
-            int startIndex = line.indexOf('(');
-            int endIndex = line.indexOf(')');
-            strBetweenBrackets = line.substring(startIndex + 1, endIndex);
-            String[] tempStrArr = strBetweenBrackets.split("[\\s\\s*,\\s*]");
-            int i = 0;
-            while(i<tempStrArr.length){
-               int bracketCount = bracketCounter(tempStrArr[i]);//This increments the angle counter per line (edited)
-               String finalType = tempStrArr[i];
-               String finalName;
-               i++;
-               int size = tempStrArr.length;
-               if(i >= size)
-                    break;
-               
-               while(bracketCount > 0){
+        while(i<tempStrArr.length){
+            int bracketCount =  BracketManager.bracketCounter(tempStrArr[i],characterFilter);
+            String finalName, finalType = tempStrArr[i];
+            i++;
+            if(i >= tempStrArr.length)
+                break; 
+
+            while(bracketCount > 0){
                 finalType += tempStrArr[i];
-                bracketCount = bracketCounter(finalType);
+                bracketCount = BracketManager.bracketCounter(finalType,characterFilter);
                 i++;
-               }
-               
-               char ch = bracketLastIndex(finalType);
-               if(ch != '*' && finalType.lastIndexOf(ch) != finalType.length()-1){
-                    finalName = finalType.substring(finalType.lastIndexOf(ch) + 1, finalType.length());
-               }
-               else{
-                    finalName = tempStrArr [ i ];
-               }
-               parameters.add(new Variable(finalName, finalType));
-                i++; 
-                                   
             }
-
+            
+            char ch = BracketManager.bracketLastIndex(finalType);
+            if(ch != '*' && finalType.lastIndexOf(ch) != finalType.length()-1){
+                finalName = finalType.substring(finalType.lastIndexOf(ch) + 1, finalType.length());
+            }
+            else{
+                finalName = tempStrArr [ i ];
+            }
+            parameters.add(new Variable(finalName, finalType));
+            i++; 
+                                
         }
-
-
-        private static int bracketCounter(String line){
-            long lt = line.chars() 
-            .filter(c -> c == '<') 
-            .count();
-            long mt = line.chars() 
-            .filter(c -> c == '>') 
-            .count();
-
-            long lb = line.chars() 
-            .filter(c -> c == '[') 
-            .count();
-            long mb = line.chars() 
-            .filter(c -> c == ']') 
-            .count();
-            return ((int) lt + (int) lb ) - ((int) mt + (int) mb);
-        }
-
-        private static char bracketLastIndex(String str){
-            if(str.lastIndexOf(">") > str.lastIndexOf("]"))
-                return '>';
-            else if(str.lastIndexOf(">") < str.lastIndexOf("]"))
-                return ']';
-            return '*';
-        }
-
-       
-
-
+    }
 
     public void setGrade(int grade){
         this.grade = grade;
@@ -135,71 +96,10 @@ public class Function extends MarkSnippet {
         return Visibility.NONE;
     }
 
-    public static String assignName(String line){
 
-        String[] tempStrArr = line.trim().split("[\\s\\s*,\\s*]"); 
-       
-        boolean[] tests = {false, false};
-        int skipCount=0;
-        if(Arrays.stream(tempStrArr).anyMatch("static"::equals))
-            tests[0] = true;
-        if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
-            tests[1] = true;
-       
-        for(boolean t: tests){
-            if(t)
-                skipCount++;
-        }
-        int i=1;
-        String functionNameString =tempStrArr[i + skipCount];
-        int bracketCount = bracketCounter(functionNameString);
-        while(bracketCount>0){
-            i++;
-            functionNameString +=bracketCounter(tempStrArr[i + skipCount]);
-            bracketCount = bracketCounter(functionNameString);
-        }
-        char ch = bracketLastIndex(functionNameString);
-
-        if(ch != '*' && functionNameString.lastIndexOf(ch) != functionNameString.length()-1)
-            functionNameString = functionNameString.substring(functionNameString.lastIndexOf(ch),functionNameString.length());
-        else
-            functionNameString = tempStrArr[i+ skipCount + 1];
-        return functionNameString;
-        
-    }
-
-
-    public static String assignreturnType(String line){
-        String[] tempStrArr = line.trim().split("[\\s\\s*,\\s*]"); 
-       
-        boolean[] tests = {false, false};
-        int skipCount=0;
-        if(Arrays.stream(tempStrArr).anyMatch("static"::equals))
-            tests[0] = true;
-        if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
-            tests[1] = true;
-       
-        for(boolean t: tests){
-            if(t)
-                skipCount++;
-        }
-        int i=1;
-        String returnTypeString =tempStrArr[i + skipCount];
-        int bracketCount = bracketCounter(returnTypeString);
-        while(bracketCount>0){
-            i++;
-            returnTypeString +=bracketCounter(tempStrArr[i + skipCount]);
-            bracketCount = bracketCounter(returnTypeString);
-        }
-        char ch = bracketLastIndex(returnTypeString);
-        if(ch != '*' && returnTypeString.lastIndexOf(ch) != returnTypeString.length()-1)
-            returnTypeString = returnTypeString.substring(0,returnTypeString.lastIndexOf(ch));
-        return returnTypeString;
-
-    }
-
-    public void processFunctionDetails(String line){//FIX: FIgure out why there are duplicate functions appearing when you press run
-        processParameterString(line);
+    public void processFunctionDetails(String line){
+        char[] characterFilter = {'<','>','[',']'};
+        processParameterString(line,characterFilter);
         String cutLine = line.substring(0,line.indexOf("("));
         this.accessModifier = assignVisibility(cutLine);
         String[] tempStrArr = cutLine.trim().split("[\\s+\\s*,{\\s*]"); 
@@ -215,7 +115,6 @@ public class Function extends MarkSnippet {
         int skipCount=0;
         if(Arrays.stream(tempStrArr).anyMatch("static"::equals)){
             tests[0] = true;
-            isStatic = true;
         }
         if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
             tests[1] = true;
@@ -230,13 +129,13 @@ public class Function extends MarkSnippet {
                         
         int i=1 + spaceCount;
         String returnTypeString =tempStrArr[i + skipCount];
-        int bracketCount = bracketCounter(returnTypeString);
+        int bracketCount = BracketManager.bracketCounter(returnTypeString,characterFilter);
         while(bracketCount>0 && returnTypeString.equals("")){
             i++;
-            returnTypeString +=bracketCounter(tempStrArr[i + skipCount]);
-            bracketCount = bracketCounter(returnTypeString);
+            returnTypeString += BracketManager.bracketCounter(tempStrArr[i + skipCount],characterFilter);
+            bracketCount = BracketManager.bracketCounter(returnTypeString,characterFilter);
         }
-        char ch = bracketLastIndex(returnTypeString);
+        char ch = BracketManager.bracketLastIndex(returnTypeString);
 
         if(ch != '*' && returnTypeString.lastIndexOf(ch) != returnTypeString.length()-1){
             this.returnType=returnTypeString.substring(0,returnTypeString.lastIndexOf(ch));

@@ -1,11 +1,10 @@
 package tempest_foundation.Testing;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Variable;
-import tempest_foundation.SubmissionElements.MarkSnippet;
+
 
 public class VariableTest implements Test {
     
