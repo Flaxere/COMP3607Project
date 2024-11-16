@@ -65,12 +65,16 @@ public class CompliationCheck {
 
             boolean taskSuccess = compilationTask.call();
             if (taskSuccess)
-                System.out.println(studentID + " code compilation was successful!");
+                //Add comment directly to PDF Generator
+                System.out.println(studentID + " code compilation was successful!\n");
             else {
-                System.out.println("Compilation failed. See errors:");
+                //Add comment directly to PDF Generator
+                System.out.println(studentID + " code compilation failed. See errors:");
                 diagnostics.getDiagnostics().forEach(diagnostic -> {
                     System.out.println("Error on line " + diagnostic.getLineNumber() + ": " + diagnostic.getMessage(null));
                 });
+                
+                System.out.println("");
             }
         } catch (Exception e) {
             e.printStackTrace();
