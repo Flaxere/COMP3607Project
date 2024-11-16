@@ -1,11 +1,11 @@
 package tempest_foundation.ClassElements;
 
 import java.util.Arrays;
+import tempest_foundation.BracketManager;
 public class Variable {
     private String type;
     private Visibility accessModifier;
     private String variableName;
-    private boolean classVariable;
     private boolean isStatic;
     
 
@@ -13,13 +13,11 @@ public class Variable {
         this.variableName = variableName;
         this.type = type;
         accessModifier = Visibility.NONE;
-        classVariable=false;
     }
     public Variable(String variableName, String type,Visibility accessModifier){
         this.variableName = variableName;
         this.type = type;
         this.accessModifier = accessModifier;
-        classVariable=false;
     }
 
 
@@ -39,16 +37,36 @@ public class Variable {
             if(t)
                 skipCount++;
         }
+        
         Visibility v = assignVisibility(line);
+        String name ;
         if(v==Visibility.NONE){
-            if(tempStrArr[1+skipCount].equals("="))
+            if(tempStrArr.length < 2){
+                name = tempStrArr[0+skipCount];
+                char ch = BracketManager.bracketLastIndex(name);
+                name=name.substring(name.lastIndexOf(ch),name.lastIndexOf(";"));
+                return name;
+            }
+            
+            name = tempStrArr[1+skipCount];
+
+            if(name.equals("="))
                 return "0nonVariable";
-            if(tempStrArr[1+skipCount].contains("="))
+            if(name.contains("="))
                 return tempStrArr[1+skipCount].substring(0, tempStrArr[1+skipCount].indexOf("="));
-            if(!tempStrArr[1+skipCount].contains(";") ||!tempStrArr[1+skipCount].contains("=") )
+            if(!name.contains(";") ||!name.contains("=") )
                 return tempStrArr[1+skipCount];
             return tempStrArr[1+skipCount].substring(0, tempStrArr[1+skipCount].indexOf(";"));
         }else{
+            
+            if(tempStrArr.length < 3){
+                name = tempStrArr[1+skipCount];
+                char ch = BracketManager.bracketLastIndex(name);
+                name=name.substring(name.lastIndexOf(ch)+1,name.lastIndexOf(";"));
+                return name;
+            }
+
+            name = tempStrArr[2+skipCount];
             if(tempStrArr[2+skipCount].contains("="))//Todo: This condition works well, but earlier checks are required to prevent += from entering 
                 return tempStrArr[2+skipCount].substring(0, tempStrArr[2+skipCount].indexOf("="));
             if(!tempStrArr[2+skipCount].contains(";") &&!tempStrArr[2+skipCount].contains("=") )
@@ -88,7 +106,6 @@ public class Variable {
     }
 
     
-    
 
     public static Visibility assignVisibility(String line){
         if(line.contains("private"))
@@ -106,7 +123,7 @@ public class Variable {
         String[] tempStrArr = line.trim().split("[,\\.\\s\\s*,\\s*]"); 
         boolean[] tests = {false, false, false};
         int skipCount=0;
-        // String tempString = new String(line.trim());
+        
         if(Arrays.stream(tempStrArr).anyMatch("static"::equals))
             tests[0] = true;
         if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
@@ -128,27 +145,6 @@ public class Variable {
             return tempStrArr[1+skipCount];
         }
         
-
-        // String tempString = new String(line.trim());
-        // if(tempString.contains("=")){
-        //     tempString = tempString.substring(0, tempString.indexOf("=")).trim();
-        //     if(tempString.contains(" ")!= true)
-        //         return "0nonVariable";
-        //     return tempString.substring(0,tempString.indexOf(" ")).trim();
-        // }
-        // if(tempString.contains("static")){
-        //     tempString = tempString.substring(tempString.indexOf("static") + 6,tempString.length()).trim();
-        //     return tempString.substring(0,tempString.indexOf(" ")).trim();
-        // }   
-
-        // if(tempString.contains(" ")!= true)
-        //     return "0nonVariable";
-        // if(assignVisibility(line) == Visibility.NONE)
-        //     return tempString.substring(0,tempString.indexOf(" ")).trim();
-
-        // tempString = tempString.substring(tempString.indexOf(" "), tempString.length()).trim();
-        // tempString = tempString.substring(0,tempString.indexOf(" ")).trim();
-        // return tempString;
     }
 
 

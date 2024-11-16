@@ -1,26 +1,29 @@
 package tempest_foundation.Testing;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Variable;
-import tempest_foundation.SubmissionElements.MarkSnippet;
+
 
 public class VariableTest implements Test {
     
-    private MarkSnippet inTesting;
+    private ClassDetails inTesting;
     private List<Variable> expectedVariables;
 
-    public VariableTest(List<Variable> expectedVariables,MarkSnippet inTesting) {
+    public VariableTest(List<Variable> expectedVariables,ClassDetails inTesting) {
         
         this.expectedVariables = expectedVariables;
         this.inTesting = inTesting;
        
     }
 
+    public void setClassDetails(ClassDetails inTesting){
+        this.inTesting=inTesting;
+    }
+
     @Override
     public void executeTest() {
-        ArrayList<Variable> variables = inTesting.getVariables();
         
         for(Variable currentVariable:inTesting.getVariables()){
            
