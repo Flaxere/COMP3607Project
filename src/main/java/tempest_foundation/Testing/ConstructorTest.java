@@ -1,8 +1,5 @@
 package tempest_foundation.Testing;
 
-import tempest_foundation.SubmissionElements.MarkSnippet;
-
-import java.lang.instrument.ClassDefinition;
 import java.util.ArrayList;
 
 import tempest_foundation.ClassElements.ClassDetails;
@@ -41,15 +38,14 @@ public class ConstructorTest implements Test{
                     // notChatBotName=ChatGpt3.5-LLM
                     int i=0;
                     while(i < testStrings.size()){
-                        if(currentString.contains(testStrings.get(i))&& currentFunction.hasVariable(new Variable("chatBotName","String"))){
+                        if((currentString.contains(testStrings.get(i)) || currentString.contains(testStrings.get(i).substring(testStrings.get(i).indexOf("="), testStrings.get(i).length()))) && currentFunction.hasVariable(new Variable("chatBotName","String"))){
                             inTesting.addGrade(grade);
                             testStrings.remove(i);
                             break;
                         }else{
                             inTesting.addGrade(0);
-                            inTesting.addComment("The constructor was supposed to contain " + " as the default chatbotname.");
+                            inTesting.addComment("The constructor was supposed to contain " + testStrings.get(i) + " as the default chatbotname.");
                         }
-            
                     }
                     // for(String str:testStrings){
                         
