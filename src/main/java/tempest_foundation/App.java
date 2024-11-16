@@ -1,14 +1,11 @@
 package tempest_foundation;
 
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Map;
 
 import org.apache.pdfbox.pdmodel.PDDocument;
-
-import com.itextpdf.text.DocumentException;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
@@ -16,6 +13,7 @@ import tempest_foundation.ClassElements.Variable;
 import tempest_foundation.ClassElements.Visibility;
 import tempest_foundation.SubmissionElements.Submission;
 import tempest_foundation.Testing.AccessorTest;
+import tempest_foundation.Testing.CompliationCheck;
 import tempest_foundation.Testing.VariableTest;
 /**
  * Hello Jura-Tempest Federation!
@@ -23,7 +21,7 @@ import tempest_foundation.Testing.VariableTest;
  */
 public class App 
 { 
-    public static void main( String[] args ) throws IOException, DocumentException//TOdo: Account for abstract classes when reading the file
+    public static void main( String[] args ) throws Exception
     {
         FileReader f = new FileReader();
        
@@ -60,5 +58,13 @@ public class App
         aTest.executeTest();
 
         System.out.println(s.getClass(0).getTotalGrade());
+
+        //Jared's Code
+        CompliationCheck jaredCompiler = new CompliationCheck("816035980");
+        jaredCompiler.RunCompliation();
+
+        //Mark's Code
+        CompliationCheck markCompiler = new CompliationCheck("816032089");
+        markCompiler.RunCompliation();
     }
 }
