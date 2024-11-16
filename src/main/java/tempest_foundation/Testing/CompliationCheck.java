@@ -24,7 +24,7 @@ public class CompliationCheck {
         this.studentID = studentID;
     }
 
-    public void RunCompliation() throws Exception {
+    public boolean RunCompliation() throws Exception {
         
         JavaCompiler compiler = ToolProvider.getSystemJavaCompiler();
 
@@ -57,16 +57,18 @@ public class CompliationCheck {
 
             if (javaFiles.size() == 0 || javaFiles == null) {
                 System.out.println("Empty directory found, cancelling compliation!");
-                return;
+                return false;
             }
 
             Iterable<? extends JavaFileObject> compilationUnits = fileManager.getJavaFileObjectsFromFiles(javaFiles);
             CompilationTask compilationTask = compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
 
             boolean taskSuccess = compilationTask.call();
-            if (taskSuccess)
+            if (taskSuccess){
                 //Add comment directly to PDF Generator
                 System.out.println(studentID + " code compilation was successful!\n");
+                return true;
+            }
             else {
                 //Add comment directly to PDF Generator
                 System.out.println(studentID + " code compilation failed. See errors:");
@@ -74,10 +76,12 @@ public class CompliationCheck {
                     System.out.println("Error on line " + diagnostic.getLineNumber() + ": " + diagnostic.getMessage(null));
                 });
                 
-                System.out.println("");
+                System.out.println();
+                return false;
             }
         } catch (Exception e) {
             e.printStackTrace();
+            return false;
         }
     }
 }

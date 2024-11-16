@@ -26,6 +26,7 @@ import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
 import tempest_foundation.SubmissionElements.Submission;
 //import org.apache.pdfbox.pdmodel.PDPage;
+import tempest_foundation.Testing.CompliationCheck;
  
 
 /**
@@ -41,24 +42,28 @@ public class FileReader {
 
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
-        @see FileReader 
-    */
-    public void readFiles(ArrayList<Submission> studentSubmissions) throws IOException {
+             * @throws Exception 
+                @see FileReader 
+            */
+            public void readFiles(ArrayList<Submission> studentSubmissions) throws Exception {
         unzip(filePath, unzippedFilePath);
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
-        String studentID="temp";
+        String studentID;
 
         for(Path p: submissionPaths){
             String currentFilePath = p.toString();
             String fileSubmissionPath = "";
-            
+            studentID = "no_id";
             if(p.toString().lastIndexOf("816") != -1) {
                 studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
                 fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
                 unzip(currentFilePath, fileSubmissionPath);
             }
-            if(fileSubmissionPath!=""){
-               
+            CompliationCheck compliationTester= new CompliationCheck(studentID);
+            if(studentID.equals("no_id") ||  compliationTester.RunCompliation()==false)
+                System.out.println("BADID/compilation failed");
+            else if(fileSubmissionPath!=""){
+              
                 Submission currSub = new Submission(studentID);
                 try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
                     paths

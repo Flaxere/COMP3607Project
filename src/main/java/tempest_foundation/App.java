@@ -59,20 +59,5 @@ public class App
 
         System.out.println(s.getClass(0).getTotalGrade());
 
-        //Jared's Code
-        CompliationCheck jaredCompiler = new CompliationCheck("816035980");
-        jaredCompiler.RunCompliation();
-
-        //Mark's Code
-        CompliationCheck markCompiler = new CompliationCheck("816032089");
-        markCompiler.RunCompliation();
-
-        //Ché's Code
-        CompliationCheck cheCompiler = new CompliationCheck("816033581");
-        cheCompiler.RunCompliation();
-
-        //Random Code
-        CompliationCheck randomCompiler = new CompliationCheck("816035457");
-        randomCompiler.RunCompliation();
     }
 }
