@@ -9,9 +9,7 @@ public interface ClassE {
     void addContent(String content);
     ArrayList<String> getContent();
 
-    ArrayList<Variable> getVariables();
-    
-    
+    ArrayList<Variable> getVariables(); 
 }
 
 

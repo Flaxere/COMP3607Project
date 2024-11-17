@@ -5,7 +5,8 @@ import tempest_foundation.ClassElements.AutoGrader;
 import tempest_foundation.SubmissionElements.Submission;
 
 /**
- * Hello Jura-Tempest Federation!
+ * Hello Jura-Tempest Foundation!
+ * App class for the project
  *
  */
 public class App 
