@@ -28,8 +28,8 @@ public class DocumentGenerator {
     */
     public void createDocument(Submission s) throws FileNotFoundException, DocumentException {
         Document document = new Document();
-        Boolean newFile = new File("..//comp3607project//GradeScripts").mkdirs();
-        PdfWriter.getInstance(document, new FileOutputStream( "..//comp3607project//GradeScripts//" + s.getStudentId() + ".pdf"));
+        Boolean newFile = new File("..//comp3607project//Submissions//PDF Reports").mkdirs();
+        PdfWriter.getInstance(document, new FileOutputStream( "..//comp3607project//Submissions//PDF Reports//" + s.getStudentId() + ".pdf"));
 
         document.open();
         Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
