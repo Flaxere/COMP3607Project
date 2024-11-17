@@ -76,7 +76,7 @@ public class FileReader {
                 CompliationCheck compliationTester= new CompliationCheck(studentID);
                 try {
                     if(studentID.equals("no_id") ||  compliationTester.RunCompliation()==false)
-                        System.out.println("BADID/compilation failed");
+                        System.out.println("bad_id/code compilation failed");
                     else if(fileSubmissionPath!=""){
                     
                         Submission currSub = new Submission(studentID);
