@@ -9,11 +9,12 @@ import tempest_foundation.ClassElements.Variable;
 public class VariableTest implements Test {
     
     private ClassDetails inTesting;
-    private List<Variable> expectedVariables;
+    private Variable expectedVariable;
+    private double grade;
 
-    public VariableTest(List<Variable> expectedVariables,ClassDetails inTesting) {
+    public VariableTest(Variable expectedVariable,ClassDetails inTesting) {
         
-        this.expectedVariables = expectedVariables;
+        this.expectedVariable = expectedVariable;
         this.inTesting = inTesting;
        
     }
@@ -25,26 +26,23 @@ public class VariableTest implements Test {
     @Override
     public void executeTest() {
         
-        for(Variable currentVariable:inTesting.getVariables()){
-           
-            if(currentVariable != null){
-                int expectedVal = expectedVariables.indexOf(currentVariable);
-                if(expectedVal!=-1){
-                    Variable expected = expectedVariables.get(expectedVal);
-                    if(expected.getVisibility()==currentVariable.getVisibility()){
-                        inTesting.addGrade(1.0);
-                        System.out.println(inTesting.getGrade());
-                    }else{
-                        inTesting.addGrade(0.5); 
-                        inTesting.addComment("The variable " + currentVariable.getName() + " was supposed to be "+expected.getVisibility());
-                        System.out.println(inTesting.getGrade());
-                        System.out.println(inTesting.getComment());
-                    }
-
-                }
+        // for(Variable currentVariable:inTesting.getVariables()){
+        int expectedVal = inTesting.getVariables().indexOf(expectedVariable);
+        // if(currentVariable != null){
+        
+        if(expectedVal!=-1){
+            Variable foundVariable = inTesting.getVariables().get(expectedVal);
+            if(foundVariable.getVisibility()==expectedVariable.getVisibility()){
+                inTesting.addGrade(grade);
+            }else{
+                inTesting.addGrade(grade/2); 
+                inTesting.addComment("The variable " + foundVariable.getName() + " was supposed to be "+expectedVariable.getVisibility());
             }
 
         }
+            // }
+
+        // }
         
 
 
@@ -52,8 +50,7 @@ public class VariableTest implements Test {
 
     @Override
     public void setGrade(double grade) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setGrade'");
+        this.grade=grade;
     }
 
 

@@ -189,7 +189,7 @@ public class FileReader {
         @param tempClass the class containing the function
         @return the function containing it's content
     */
-    private Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass) {
+    private synchronized Function readFunction(ArrayList<String> fileContents,int[] bracketCount, Scanner scanner, String line, ClassDetails tempClass) {
 
         Function tempFunction = null;
         String funcName =line;
@@ -222,7 +222,7 @@ public class FileReader {
         @param line The line that will be scanned for a bracket
         @return 
     */
-    private int bracketCounter(String line,ClassDetails classref,Function funcRef) {
+    private synchronized int bracketCounter(String line,ClassDetails classref,Function funcRef) {
 
         if(line.contains("{") &&line.contains("}") ){
             // stringRef[0]+=line  + "\n";

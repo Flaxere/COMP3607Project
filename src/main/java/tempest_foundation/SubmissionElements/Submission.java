@@ -23,6 +23,15 @@ public class Submission {
         return classes.get(num);
     }
 
+    public double getGrade(){
+        double grade =0;
+        for(ClassDetails c:classes)
+            grade+=c.getTotalGrade();
+        return grade;
+    }
+
+    public String getStudentId(){return studentID;}
+
     public int getNumClasses(){return classes.size();}
 
     public String toString(){

@@ -44,30 +44,40 @@ public class AccessorTest implements Test {
         if(function!=null){
             Function f = function;
             Optional<Function> targetFunction = inTesting.getFunctions().stream()
-                .filter(var -> var.getContent() == f.getContent())
+                .filter(var -> var == f)
                 .findFirst();
 
             targetFunction.ifPresent(var -> {
-                
-                //Add mark if the accessor function prototype matches
-                if (expectedFunction.equals(var))
-                    f.addGrade(grade/2);
-                else
-                    f.addComment(f.getFunctionName() + " did not contain the correct function prototype.");
+            
+            //Add mark if the accessor function prototype matches
+            // if(var.equals(function))
+            f.addGrade(grade/2);
 
-                //Add mark if the return statement matches
-                if (var.getContent().contains(expectedFunction.getContent().toString()))
-                    f.addGrade(grade/2);
-                else
-                    f.addComment(f.getFunctionName() + " did not return the correct value.");
-                System.out.println(var.getContent().toString());
-                System.out.println(expectedFunction.getContent().toString());
-
+            //Add mark if the return statement matches
+            String expectedDetails =extractContent(expectedFunction.getContent().toString());
+            String actualDetails = var.getContent().toString().replaceAll("\\s", "");
+            actualDetails = extractContent(actualDetails);
+            actualDetails = actualDetails.replaceAll("[()]", "");
+            expectedDetails =expectedDetails.replaceAll("\\s", "");
+          
+            if (actualDetails.contains(expectedDetails))
+                f.addGrade(grade/2);
+            else
+                f.addComment(f.getFunctionName() + " did not return the correct value.");
+              
+           
             });
         }
         
-       
+    }
 
-        System.out.println(inTesting.getGrade());
+    private String extractContent(String functionDetails){
+        int startPos = functionDetails.indexOf("return");
+        int endPos = functionDetails.indexOf(";");
+        if(startPos == -1 || endPos ==-1)
+            return "FAIL";
+        return functionDetails.substring(functionDetails.indexOf("return"),functionDetails.lastIndexOf(";")+1);
     }
 }
+
+

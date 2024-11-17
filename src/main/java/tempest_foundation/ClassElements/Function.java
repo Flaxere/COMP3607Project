@@ -12,6 +12,7 @@ public class Function extends MarkSnippet {
     private ArrayList<String> functionContent;
     private boolean constructor;
     private String returnType;
+    private boolean isStatic=false;
     // private boolean isStatic;
     
     
@@ -78,6 +79,7 @@ public class Function extends MarkSnippet {
     public String getFunctionName(){return functionName;}
     public Visibility getAccessModifier(){return accessModifier;}
     public String getReturnType(){return returnType;}
+    public boolean isStatic(){return isStatic;}
 
 
     public void setFunctionName(String functionName){this.functionName=functionName;}
@@ -114,6 +116,7 @@ public class Function extends MarkSnippet {
         boolean[] tests = {false, false};
         int skipCount=0;
         if(Arrays.stream(tempStrArr).anyMatch("static"::equals)){
+            isStatic=true;
             tests[0] = true;
         }
         if(Arrays.stream(tempStrArr).anyMatch("final"::equals))
@@ -188,7 +191,10 @@ public class Function extends MarkSnippet {
     }
 
     public String toString(){
-        String str=accessModifier + " " +  returnType + " " + functionName + "(";
+        String str=accessModifier + " ";
+        if(isStatic)
+            str+= "static ";
+        str+= returnType + " " + functionName + "(";
         for(Variable p:parameters)
             str+=p.getType() + " " + p.getName() + ",";
         str = str.substring(0, str.length()-1);
@@ -198,30 +204,13 @@ public class Function extends MarkSnippet {
             str+="()";
         return str;
     }
-    
-//     public boolean equals(Object obj) {?? where did this even come from, idk
-//         if (obj instanceof  Function) {
-//             Function f = (Function) obj;
-//             if(f.getFunctionName().equals(this.getFunctionName()) && f.getAccessModifier().equals(this.getAccessModifier())) {
-//                 for (Variable p:f.parameters) {
-//                     int expectedParameter = f.parameters.indexOf(p);
-//                     if (expectedParameter == -1) {
-//                         return false;
-//                     }
-//                 }
-                
-//                 return true;
-//             }
-                
-//       }
-//         return false;
-//    }
+
 
     public boolean equals(Object obj) {
         if (obj instanceof  Function) {
             Function f = (Function) obj;
             if(f.getFunctionName().equals(this.getFunctionName()) && f.getReturnType().equals(this.getReturnType()) 
-            && f.getAccessModifier().equals(this.getAccessModifier()))
+            && f.getAccessModifier().equals(this.getAccessModifier()) && f.isStatic() ==this.isStatic())
                    return true;
       }
         return false;

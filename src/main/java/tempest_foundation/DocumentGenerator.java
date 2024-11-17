@@ -1,5 +1,6 @@
 package tempest_foundation;
 
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.util.ArrayList;
@@ -27,13 +28,14 @@ public class DocumentGenerator {
     */
     public void createDocument(Submission s) throws FileNotFoundException, DocumentException {
         Document document = new Document();
-        PdfWriter.getInstance(document, new FileOutputStream("kennyhello.pdf"));
+        Boolean newFile = new File("..//comp3607project//GradeScripts").mkdirs();
+        PdfWriter.getInstance(document, new FileOutputStream( "..//comp3607project//GradeScripts//" + s.getStudentId() + ".pdf"));
 
         document.open();
         Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
-        Chunk chunk = new Chunk("816035980 ", font);
+        Chunk chunk = new Chunk(s.getStudentId(), font);
         Paragraph paragraph = new Paragraph("This is a test to see how a pdf would look with a paragraph and a chunk",font);
-        chunk.append("100%");
+        chunk.append(" " + s.getGrade() + "%");
         document.add(chunk);
         document.add(paragraph);
         //trying to create a table

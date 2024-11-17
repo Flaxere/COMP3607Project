@@ -74,7 +74,7 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
             test[1]=true;
 
         if(test[1] && test[2]){
-            pos = Math. min( line.indexOf("extends"),line.indexOf("implements"));
+            pos = Math.min( line.indexOf("extends"),line.indexOf("implements"));
         }else if(test[1]){
             pos = line.indexOf("extends");
         }else if(test[2]){

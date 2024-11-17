@@ -4,6 +4,9 @@ import javax.tools.JavaCompiler;
 import javax.tools.ToolProvider;
 
 import javax.tools.JavaCompiler.CompilationTask;
+
+import tempest_foundation.DocumentGenerator;
+
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaFileObject;
 import javax.tools.StandardJavaFileManager;
@@ -57,6 +60,7 @@ public class CompliationCheck {
 
             if (javaFiles.size() == 0 || javaFiles == null) {
                 System.out.println("Empty directory found, cancelling compliation!");
+                // DocumentGenerator.generateFailDocument(fileSubmissionPath);
                 return false;
             }
 

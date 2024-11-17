@@ -6,7 +6,6 @@ public class Variable {
     private String type;
     private Visibility accessModifier;
     private String variableName;
-    private boolean isStatic;
     
 
     public Variable(String variableName, String type){
