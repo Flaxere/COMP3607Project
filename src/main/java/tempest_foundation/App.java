@@ -29,10 +29,7 @@ public class App
         d.createDocument();
         ArrayList<Submission> submissions = new ArrayList<>();
         f.readFiles(submissions);
-   
-        for(ClassDetails c:submissions.get(2).getClasses()){
-            System.out.println(c);
-        }
+
         ArrayList<Variable> var = new ArrayList<>();
         var.add(new Variable("chatBotName", "String", Visibility.PROTECTED));
         var.add(new Variable("numResponsesGenerated", "int", Visibility.PRIVATE));

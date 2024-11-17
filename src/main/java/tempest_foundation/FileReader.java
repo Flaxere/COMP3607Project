@@ -42,7 +42,6 @@ public class FileReader {
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
     private boolean sLineFunc;
-    private ClassDetails tempClass;
 
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
@@ -60,6 +59,7 @@ public class FileReader {
             executor.submit(() -> {
 
                 String studentID;
+                ClassDetails tempClass = null;
 
                 String currentFilePath = p.toString();
                 String fileSubmissionPath = "";
@@ -87,8 +87,8 @@ public class FileReader {
                                 .forEach(path -> {
                                     try {
                                         Scanner scanner = new Scanner(path);
-                                        readAssigment(scanner);
-                                        currSub.addClass(new ClassDetails(tempClass.getClassName(),tempClass.getVariables(),tempClass.getFunctions()));
+                                        ClassDetails newClass = readAssigment(scanner, tempClass);
+                                        currSub.addClass(new ClassDetails(newClass.getClassName(),newClass.getVariables(),newClass.getFunctions()));
                                     } catch (IOException e) {
                                         System.out.println("Error reading file: " + path + " - " + e.getMessage());
                                     }
@@ -121,7 +121,7 @@ public class FileReader {
         Reads through the assignment, maintaining awareness of class and function content
         @param scanner the scanner that keeps track of the current reading
     */
-    private synchronized void readAssigment(Scanner scanner) {
+    private synchronized ClassDetails readAssigment(Scanner scanner, ClassDetails tempClass) {
 
         ArrayList<String> fileContents = new ArrayList<>(); 
         tempClass = null;
@@ -165,7 +165,9 @@ public class FileReader {
             }   
             fileContents.add(line);
         }
+
         scanner.close();
+        return tempClass;
     }
 
     private boolean isComment(String line){
