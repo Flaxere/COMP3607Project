@@ -20,6 +20,11 @@ public class ConstructorTest implements Test{
     }
 
     @Override
+    public void setClassDetails(ClassDetails inTesting) {
+        this.inTesting = inTesting;
+    }
+    
+    @Override
     public void executeTest() {
 
         ArrayList<Function> functions = inTesting.getFunctions();
@@ -37,8 +42,10 @@ public class ConstructorTest implements Test{
                     // "ChatGpt3.5-LLM"
                     // notChatBotName=ChatGpt3.5-LLM
                     int i=0;
-                    while(i < testStrings.size()){
-                        if((currentString.contains(testStrings.get(i)) || currentString.contains(testStrings.get(i).substring(testStrings.get(i).indexOf("="), testStrings.get(i).length()))) && currentFunction.hasVariable(new Variable("chatBotName","String"))){
+                    for(i=0;i < testStrings.size();i++){
+                        if((currentString.contains(testStrings.get(i)) 
+                        || currentString.contains(testStrings.get(i).substring(testStrings.get(i).indexOf("="), testStrings.get(i).length()))) 
+                        && currentFunction.hasVariable(new Variable("chatBotName","String"))){
                             inTesting.addGrade(grade);
                             testStrings.remove(i);
                             break;
@@ -65,4 +72,6 @@ public class ConstructorTest implements Test{
             }
         } 
     }
+
+   
 }

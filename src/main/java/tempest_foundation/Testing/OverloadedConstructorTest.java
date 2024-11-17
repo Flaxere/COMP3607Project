@@ -21,6 +21,13 @@ public class OverloadedConstructorTest implements Test{
     }
 
     @Override
+    public void setClassDetails(ClassDetails inTesting) {
+        this.inTesting=inTesting;
+        // TODO Auto-generated method stub
+        throw new UnsupportedOperationException("Unimplemented method 'setClassDetails'");
+    }
+
+    @Override
     public void executeTest() {
 
         ArrayList<Function> functions = inTesting.getFunctions();
@@ -77,4 +84,6 @@ public class OverloadedConstructorTest implements Test{
             }
         } 
     }
+
+   
 }

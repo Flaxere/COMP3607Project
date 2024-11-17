@@ -195,23 +195,23 @@ public class Function extends MarkSnippet {
         return str;
     }
     
-    public boolean equals(Object obj) {
-        if (obj instanceof  Function) {
-            Function f = (Function) obj;
-            if(f.getFunctionName().equals(this.getFunctionName()) && f.getAccessModifier().equals(this.getAccessModifier())) {
-                for (Variable p:f.parameters) {
-                    int expectedParameter = f.parameters.indexOf(p);
-                    if (expectedParameter == -1) {
-                        return false;
-                    }
-                }
+//     public boolean equals(Object obj) {?? where did this even come from, idk
+//         if (obj instanceof  Function) {
+//             Function f = (Function) obj;
+//             if(f.getFunctionName().equals(this.getFunctionName()) && f.getAccessModifier().equals(this.getAccessModifier())) {
+//                 for (Variable p:f.parameters) {
+//                     int expectedParameter = f.parameters.indexOf(p);
+//                     if (expectedParameter == -1) {
+//                         return false;
+//                     }
+//                 }
                 
-                return true;
-            }
+//                 return true;
+//             }
                 
-      }
-        return false;
-   }
+//       }
+//         return false;
+//    }
 
     public boolean equals(Object obj) {
         if (obj instanceof  Function) {
