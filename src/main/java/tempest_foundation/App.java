@@ -26,26 +26,26 @@ public class App
         FileReader f = new FileReader();
        
         DocumentGenerator d = new DocumentGenerator();
-        d.createDocument();
         ArrayList<Submission> submissions = new ArrayList<>();
         f.readFiles(submissions);
 
         ArrayList<Variable> var = new ArrayList<>();
-        var.add(new Variable("chatBotName", "String", Visibility.PROTECTED));
+        var.add(new Variable("chatBotName", "String", Visibility.PRIVATE));
         var.add(new Variable("numResponsesGenerated", "int", Visibility.PRIVATE));
         var.add(new Variable("messageLimit", "int" ,Visibility.PRIVATE));
         var.add(new Variable("messageNumber", "int", Visibility.PRIVATE));
 
-        Submission s =submissions.get(2);
+        Submission s =submissions.get(0);
         VariableTest vTest = new VariableTest(var, s.getClass(0));
         vTest.executeTest();
 
         Function func = new Function();
         func.processFunctionDetails("public String getChatBotName()");
-        func.addContent("return chatBotName ;");
+        func.addContent("return chatBotName;");
 
         AccessorTest aTest = new AccessorTest(func);
         aTest.setClassDetails(s.getClass(0));
+        aTest.setGrade(1.0);
         aTest.executeTest();
 
         func = new Function();
@@ -54,7 +54,14 @@ public class App
         aTest.setExpectedFunction(func);
         aTest.executeTest();
 
-        System.out.println(s.getClass(0).getTotalGrade());
+        func = new Function();
+        func.processFunctionDetails("public int getTotalNumResponsesGenerated()");
+        func.addContent("return messageNumber;");
+        aTest.setExpectedFunction(func);
+        aTest.executeTest();
+
+        d.createDocument(submissions.get(0));
+        // System.out.println(s.getClass(0).getTotalGrade());
 
     }
 }

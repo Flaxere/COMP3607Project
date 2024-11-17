@@ -191,7 +191,11 @@ public class Function extends MarkSnippet {
         String str=accessModifier + " " +  returnType + " " + functionName + "(";
         for(Variable p:parameters)
             str+=p.getType() + " " + p.getName() + ",";
-        str+=")";
+        str = str.substring(0, str.length()-1);
+        if(parameters.size()!=0)
+            str+=")";
+        else
+            str+="()";
         return str;
     }
     
