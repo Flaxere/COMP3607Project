@@ -22,10 +22,15 @@ import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.FileUtils;
 
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
+
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
 import tempest_foundation.SubmissionElements.Submission;
 //import org.apache.pdfbox.pdmodel.PDPage;
+import tempest_foundation.Testing.CompliationCheck;
  
 
 /**
@@ -37,48 +42,74 @@ public class FileReader {
     private String unzippedFilePath = "..\\comp3607project\\UnzippedFolder\\";
     private List<Path> submissionPaths;
     private boolean sLineFunc;
-    private ClassDetails tempClass;
 
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
-        @see FileReader 
-    */
-    public void readFiles(ArrayList<Submission> studentSubmissions) throws IOException {
+             * @throws Exception 
+                @see FileReader 
+            */
+            public void readFiles(ArrayList<Submission> studentSubmissions) throws Exception {
         unzip(filePath, unzippedFilePath);
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
-        String studentID="temp";
+
+        ExecutorService executor = Executors.newFixedThreadPool(submissionPaths.size());
 
         for(Path p: submissionPaths){
-            String currentFilePath = p.toString();
-            String fileSubmissionPath = "";
-            
-            if(p.toString().lastIndexOf("816") != -1) {
-                studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
-                fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
-                unzip(currentFilePath, fileSubmissionPath);
-            }
-            if(fileSubmissionPath!=""){
-               
-                Submission currSub = new Submission(studentID);
-                try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
-                    paths
-                        .filter(Files::isRegularFile) 
-                        .filter(path -> path.toString().endsWith(".java")) 
-                        .forEach(path -> {
-                            try {
-                                Scanner scanner = new Scanner(path);
-                                readAssigment(scanner);
-                                currSub.addClass(new ClassDetails(tempClass.getClassName(),tempClass.getVariables(),tempClass.getFunctions()));
-                            } catch (IOException e) {
-                                System.out.println("Error reading file: " + path + " - " + e.getMessage());
-                            }
-                        });
-                } catch (IOException e) {
-                    System.out.println("IOException: " + e.getMessage());
-                }
 
-                studentSubmissions.add(currSub);
-            }
+            executor.submit(() -> {
+
+                String studentID;
+                ClassDetails tempClass = null;
+
+                String currentFilePath = p.toString();
+                String fileSubmissionPath = "";
+                studentID = "no_id";
+                if(p.toString().lastIndexOf("816") != -1) {
+                    studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
+                    fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
+                    try {
+                        unzip(currentFilePath, fileSubmissionPath);
+                    } catch (IOException e) {
+                        e.printStackTrace();
+                    }
+                }
+                CompliationCheck compliationTester= new CompliationCheck(studentID);
+                try {
+                    if(studentID.equals("no_id") ||  compliationTester.RunCompliation()==false)
+                        System.out.println("bad_id/code compilation failed");
+                    else if(fileSubmissionPath!=""){
+                    
+                        Submission currSub = new Submission(studentID);
+                        try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
+                            paths
+                                .filter(Files::isRegularFile) 
+                                .filter(path -> path.toString().endsWith(".java")) 
+                                .forEach(path -> {
+                                    try {
+                                        Scanner scanner = new Scanner(path);
+                                        ClassDetails newClass = readAssigment(scanner, tempClass);
+                                        currSub.addClass(new ClassDetails(newClass.getClassName(),newClass.getVariables(),newClass.getFunctions()));
+                                    } catch (IOException e) {
+                                        System.out.println("Error reading file: " + path + " - " + e.getMessage());
+                                    }
+                                });
+                        } catch (IOException e) {
+                            System.out.println("IOException: " + e.getMessage());
+                        }
+
+                        studentSubmissions.add(currSub);
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        executor.shutdown();
+        try {
+            executor.awaitTermination(30, TimeUnit.SECONDS);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
         }
 
         File oldZipFolder = new File(unzippedFilePath);
@@ -90,7 +121,7 @@ public class FileReader {
         Reads through the assignment, maintaining awareness of class and function content
         @param scanner the scanner that keeps track of the current reading
     */
-    private void readAssigment(Scanner scanner) {
+    private synchronized ClassDetails readAssigment(Scanner scanner, ClassDetails tempClass) {
 
         ArrayList<String> fileContents = new ArrayList<>(); 
         tempClass = null;
@@ -100,7 +131,7 @@ public class FileReader {
             //The code snippet below still neeeds to account for single line functions
            
             Function tempFunction = null;
-             if(line.lastIndexOf("{")!=-1){//TODO: Run through all of the code, replacing the old functionality with the more abstract version
+            if(line.lastIndexOf("{")!=-1){//TODO: Run through all of the code, replacing the old functionality with the more abstract version
                 classNameString = line.substring(0, line.lastIndexOf("{")+1).trim();
                 if(classNameString.substring(0, 1).equals("{"))
                     classNameString =fileContents.get(fileContents.size()-1);
@@ -115,8 +146,8 @@ public class FileReader {
                     if(tempFunction!=null){
                         tempFunction.addContent(line);
                         tempClass.addFunction(tempFunction);
-              
                     }
+                    
                     fileContents.add(line);
                     line = nextNonEmptyLine(scanner);
                   
@@ -134,7 +165,9 @@ public class FileReader {
             }   
             fileContents.add(line);
         }
+
         scanner.close();
+        return tempClass;
     }
 
     private boolean isComment(String line){
