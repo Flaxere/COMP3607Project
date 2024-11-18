@@ -36,7 +36,7 @@ public class TestSuite {
         func.processFunctionDetails("public String getChatBotName()");
         func.addContent("return chatBotName;");
 
-        AccessorTest aTest = new AccessorTest(func);
+        AccessorTest aTest = new AccessorTest();
         aTest.setClassDetails(s.getClass(0));
         aTest.setGrade(1.0);
         aTest.executeTest();
