@@ -2,7 +2,9 @@ package tempest_foundation.SubmissionElements;
 import java.util.ArrayList;
 
 import tempest_foundation.ClassElements.*;
+
 public class Submission {
+    
     private String studentID;
     private ArrayList<ClassDetails> classes;
 
@@ -48,8 +50,5 @@ public class Submission {
 
     public int getNumClasses(){return classes.size();}
 
-    public String toString(){
-        return "Student " + studentID + " - " + getNumClasses() + " Classes\t=>" + getClasses() ;
-    }
-    
+    public String toString(){return "Student " + studentID + " - " + getNumClasses() + " Classes\t=>" + getClasses();}
 }

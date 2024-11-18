@@ -5,27 +5,27 @@ import java.util.ArrayList;
 import tempest_foundation.SubmissionElements.MarkSnippet;
 
 
-public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
+public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
+
     private String className;
     private ArrayList<Variable> variables;
     private ArrayList<String> classContent;
     private ArrayList<Function> functions;
 
+    public ClassDetails(String className) {
 
-    public ClassDetails(String className){
         super();
         this.className = className;
         variables = new ArrayList<>();
         functions = new ArrayList<>();
-        
     }
 
-    public ClassDetails(String className,ArrayList<Variable> variables,ArrayList<Function> functions ){
+    public ClassDetails(String className,ArrayList<Variable> variables,ArrayList<Function> functions ) {
+
         this.className = className;
         this.variables = variables;
         this.functions = functions;
     }
-
 
     public void addFunction(Function f){
         functions.add(f);
@@ -36,8 +36,6 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
        this.classContent = content;
     }
     
-   
-
     @Override
     public void addContent(String content){
         this.classContent.add(content);
@@ -51,6 +49,7 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
     public ArrayList<String> getContent() {
         return this.classContent;
     }
+
     @Override
     public void addVariable(String line){//FIX: THis is the function jared. Just put the variable in the bag bro
         String varName = Variable.assignName(line);
@@ -61,13 +60,13 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
             variables.add(new Variable(varName, Variable.assignType(line)));
         }else
             variables.add(new Variable(Variable.assignName(line), Variable.assignType(line),vis)) ;
-
-        
     }  
 
-    public static String assignName(String line){
+    public static String assignName(String line) {
+
         Boolean[] test = {false,false};
         int pos =line.lastIndexOf("{");
+
         if(line.contains("extends"))
             test[0]=true;
         if(line.contains("implements"))
@@ -96,12 +95,12 @@ public class ClassDetails extends MarkSnippet{//TODO: THis is the CLASS class
         return totalGrade;
     }
 
-    public String toString(){
+    public String toString() {
+
         String str = getClassName() + ":\n";
 
         for(Function f:functions)
             str +=f + "\n";
         return str;
     }
-
 }

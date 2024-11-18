@@ -5,20 +5,15 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.util.ArrayList;
-import java.util.Enumeration;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 import java.util.Scanner;
 import java.util.stream.Collectors;
 import java.util.stream.Stream;
 import java.util.zip.ZipEntry;
-import java.util.zip.ZipException;
 import java.util.zip.ZipInputStream;
 import org.apache.commons.io.FileUtils;
 
@@ -29,8 +24,9 @@ import java.util.concurrent.TimeUnit;
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
 import tempest_foundation.SubmissionElements.Submission;
-//import org.apache.pdfbox.pdmodel.PDPage;
 import tempest_foundation.Testing.CompliationCheck;
+import tempest_foundation.Testing.SystemEvaluation;
+import tempest_foundation.Testing.TestEnum;
  
 
 /**
@@ -45,63 +41,86 @@ public class FileReader {
 
     /**
         Unzips and reads the files within the given directory specified globally in the FileReader class
-             * @throws Exception 
-                @see FileReader 
-            */
-            public void readFiles(ArrayList<Submission> studentSubmissions) throws Exception {
+        * @throws Exception 
+        @see FileReader 
+    */
+    public void readFiles(ArrayList<Submission> studentSubmissions) throws Exception {
+
         unzip(filePath, unzippedFilePath);
         submissionPaths = listFiles(Paths.get(unzippedFilePath));
 
-        ExecutorService executor = Executors.newFixedThreadPool(submissionPaths.size());
+        if (submissionPaths.size() == 0) {
+            DocumentGenerator.generateNoSumbmissionDocument(filePath);
+            return;
+        }
 
-        for(Path p: submissionPaths){
+        int correctNames = 0;
 
+        for (Path p: submissionPaths) {
+            if(p.toString().lastIndexOf("816") != -1)
+                correctNames++;
+        }
+
+        ExecutorService executor = Executors.newFixedThreadPool(correctNames);
+
+        for(Path p: submissionPaths) {
+
+            if(p.toString().lastIndexOf("816") == -1)
+                continue;
+            
+            long startThreadTime = System.nanoTime();
             executor.submit(() -> {
 
-                String studentID;
-                ClassDetails tempClass = null;
+            String studentID = "no_id";
+            ClassDetails tempClass = null;
 
-                String currentFilePath = p.toString();
-                String fileSubmissionPath = "";
-                studentID = "no_id";
-                if(p.toString().lastIndexOf("816") != -1) {
-                    studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
-                    fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
-                    try {
-                        unzip(currentFilePath, fileSubmissionPath);
-                    } catch (IOException e) {
-                        e.printStackTrace();
-                    }
-                }
-                CompliationCheck compliationTester= new CompliationCheck(studentID);
+            String currentFilePath = p.toString();
+            String fileSubmissionPath = "";
+
+            if(p.toString().lastIndexOf("816") != -1) {
+                studentID = p.toString().substring(p.toString().lastIndexOf("816"),p.toString().lastIndexOf("816") + 9);
+                fileSubmissionPath = "..\\comp3607project\\Submissions\\" + studentID + "\\";
+                
                 try {
-                    if(studentID.equals("no_id") ||  compliationTester.RunCompliation()==false)
-                        System.out.println("bad_id/code compilation failed");
-                    else if(fileSubmissionPath!=""){
-                    
-                        Submission currSub = new Submission(studentID);
-                        try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
-                            paths
-                                .filter(Files::isRegularFile) 
-                                .filter(path -> path.toString().endsWith(".java")) 
-                                .forEach(path -> {
-                                    try {
-                                        Scanner scanner = new Scanner(path);
-                                        ClassDetails newClass = readAssigment(scanner, tempClass);
-                                        currSub.addClass(new ClassDetails(newClass.getClassName(),newClass.getVariables(),newClass.getFunctions()));
-                                    } catch (IOException e) {
-                                        System.out.println("Error reading file: " + path + " - " + e.getMessage());
-                                    }
-                                });
-                        } catch (IOException e) {
-                            System.out.println("IOException: " + e.getMessage());
-                        }
-
-                        studentSubmissions.add(currSub);
-                    }
-                } catch (Exception e) {
+                    unzip(currentFilePath, fileSubmissionPath);
+                } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+                
+            long startTime = System.nanoTime();
+            CompliationCheck compliationTester= new CompliationCheck(studentID);
+            long endTime = System.nanoTime();
+
+            SystemEvaluation.addOverheadTime(startTime, endTime, studentID, TestEnum.COMPILATION);
+
+            try {
+                if(studentID.equals("no_id") ||  compliationTester.RunCompliation()==false)
+                    System.out.println("bad_id/code compilation failed\n");
+                else if(fileSubmissionPath!=""){
+                
+                    Submission currSub = new Submission(studentID);
+                    try (Stream<Path> paths = Files.walk(Paths.get(fileSubmissionPath))) {
+                        paths
+                            .filter(Files::isRegularFile) 
+                            .filter(path -> path.toString().endsWith(".java")) 
+                            .forEach(path -> {
+                                try {
+                                    Scanner scanner = new Scanner(path);
+                                    ClassDetails newClass = readAssigment(scanner, tempClass);
+                                    currSub.addClass(new ClassDetails(newClass.getClassName(),newClass.getVariables(),newClass.getFunctions()));
+
+                                } catch (IOException e) {System.out.println("Error reading file: " + path + " - " + e.getMessage());}
+                            });
+
+                        } catch (IOException e) {System.out.println("IOException: " + e.getMessage());}
+                        studentSubmissions.add(currSub);
+                    }
+                } catch (Exception e) {e.printStackTrace();}
+
+                long endThreadTime = System.nanoTime();
+
+                SystemEvaluation.addOverheadTime(startThreadTime, endThreadTime, studentID, TestEnum.THREAD);
             });
         }
 
@@ -162,7 +181,8 @@ public class FileReader {
                     sLineFunc = false;
                     tempFunction = null;
                 }
-            }   
+            }
+
             fileContents.add(line);
         }
 
@@ -170,13 +190,12 @@ public class FileReader {
         return tempClass;
     }
 
-    private boolean isComment(String line){
+    private boolean isComment(String line) {
+
         line = line.trim();
         if(line.indexOf("/")==0)
             return true;
         return false;
-
-
     }
 
 
@@ -193,6 +212,7 @@ public class FileReader {
 
         Function tempFunction = null;
         String funcName =line;
+
         line=line.trim();
         while(bracketCount[0]>1){
             if (tempFunction==null){
@@ -252,15 +272,16 @@ public class FileReader {
     private String nextNonEmptyLine(Scanner scanner) {
 
         String nEmptyString;
-        if(!scanner.hasNextLine()){
+        if(!scanner.hasNextLine()) {
             return "";
-        }  
+        }
+
         nEmptyString = scanner.nextLine();
-        while(scanner.hasNextLine() && nEmptyString.trim().equals("")){
+        while(scanner.hasNextLine() && nEmptyString.trim().equals("")) {
             nEmptyString = scanner.nextLine();
         }
-        return nEmptyString;
 
+        return nEmptyString;
     }
 
 
@@ -280,6 +301,7 @@ public class FileReader {
         
         if(result.size()==0)
             System.out.print("No submissions exist in this directory");
+
         return result;
     }
 

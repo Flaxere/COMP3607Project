@@ -59,8 +59,9 @@ public class CompliationCheck {
             }
 
             if (javaFiles.size() == 0 || javaFiles == null) {
+
                 System.out.println("Empty directory found, cancelling compliation!");
-                // DocumentGenerator.generateFailDocument(fileSubmissionPath);
+                DocumentGenerator.generateFailDocument(studentID);
                 return false;
             }
 
@@ -68,13 +69,9 @@ public class CompliationCheck {
             CompilationTask compilationTask = compiler.getTask(null, fileManager, diagnostics, null, null, compilationUnits);
 
             boolean taskSuccess = compilationTask.call();
-            if (taskSuccess){
-                //Add comment directly to PDF Generator
-                System.out.println(studentID + " code compilation was successful!\n");
+            if (taskSuccess)
                 return true;
-            }
             else {
-                //Add comment directly to PDF Generator
                 System.out.println(studentID + " code compilation failed. See errors:");
                 diagnostics.getDiagnostics().forEach(diagnostic -> {
                     System.out.println("Error on line " + diagnostic.getLineNumber() + ": " + diagnostic.getMessage(null));

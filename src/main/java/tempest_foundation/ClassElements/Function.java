@@ -165,8 +165,10 @@ public class Function extends MarkSnippet {
     public void setContent(ArrayList<String> content) {
        this.functionContent = content;
     }
+    
     @Override
-    public void addVariable(String line){
+    public void addVariable(String line) {
+
         String varName = Variable.assignName(line);
         if(varName.equals("0nonVariable"))
             return;
@@ -181,7 +183,7 @@ public class Function extends MarkSnippet {
         return this.functionContent;
     }
 
-    public Boolean hasVariable(Variable v){
+    public Boolean hasVariable(Variable v) {
         for(Variable var:variables){
             if(var.equals(v)){
                 return true;
@@ -191,7 +193,8 @@ public class Function extends MarkSnippet {
         return false;
     }
 
-    public String toString(){
+    public String toString() {
+
         String str=accessModifier + " ";
         if(isStatic)
             str+= "static ";
@@ -206,8 +209,8 @@ public class Function extends MarkSnippet {
         return str;
     }
 
-
     public boolean equals(Object obj) {
+
         if (obj instanceof  Function) {
             Function f = (Function) obj;
             if(f.getParameters().toString().equalsIgnoreCase(this.getParameters().toString()) && f.getFunctionName().equalsIgnoreCase(this.getFunctionName()) && f.getReturnType().equalsIgnoreCase(this.getReturnType()) 

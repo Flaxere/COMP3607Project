@@ -1,6 +1,5 @@
 package tempest_foundation.Testing;
 
-import java.util.ArrayList;
 import java.util.Optional;
 
 import tempest_foundation.ClassElements.ClassDetails;
@@ -12,9 +11,6 @@ public class AccessorTest implements Test {
     private ClassDetails inTesting;
     private Function expectedFunction;
     private double grade;
-
-   
-
     public void setClassDetails(ClassDetails inTesting){
         this.inTesting=inTesting;
     }
@@ -29,7 +25,6 @@ public class AccessorTest implements Test {
 
     @Override
     public void executeTest() {
-       
         Function function = null;
         for (Function currentFunction: inTesting.getFunctions()) {
             if(currentFunction.equals(expectedFunction)){
@@ -44,13 +39,11 @@ public class AccessorTest implements Test {
                 .findFirst();
 
             targetFunction.ifPresent(var -> {
-
-            
             f.addGrade(grade/2);
 
-            //Add mark if the return statement matches
             String expectedDetails =extractContent(expectedFunction.getContent().toString());
             String actualDetails = var.getContent().toString().replaceAll("\\s", "");
+            
             actualDetails = extractContent(actualDetails);
             actualDetails = actualDetails.replaceAll("[()]", "");
             expectedDetails =expectedDetails.replaceAll("\\s", "");
@@ -59,13 +52,13 @@ public class AccessorTest implements Test {
                 f.addGrade(grade/2);
             else
                 f.addComment(f.getFunctionName() + " did not return the correct value.");
+
            
             f.setTotal(grade);
             
             });
 
         }
-
     }
 
     private String extractContent(String functionDetails){
@@ -76,5 +69,3 @@ public class AccessorTest implements Test {
         return functionDetails.substring(functionDetails.indexOf("return"),functionDetails.lastIndexOf(";")+1);
     }
 }
-
-

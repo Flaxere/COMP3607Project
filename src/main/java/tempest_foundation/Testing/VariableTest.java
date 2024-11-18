@@ -41,17 +41,11 @@ public class VariableTest implements Test {
 
         }
             // }
-
         // }
-        
-
-
     }
 
     @Override
     public void setGrade(double grade) {
         this.grade=grade;
     }
-
-
 }
