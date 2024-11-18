@@ -20,10 +20,12 @@ import com.itextpdf.text.pdf.PdfWriter;
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
 import tempest_foundation.SubmissionElements.Submission;
+import tempest_foundation.Testing.TestEnum;
 
 public class DocumentGenerator {
 
     private static Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
+    private static Document overheadDocument = new Document();
 
     /**
         Creates the directory in which the PDF Reports will be generated
@@ -138,4 +140,26 @@ public class DocumentGenerator {
         doc.add(p);
         doc.close();
     }
+
+    public static synchronized void instantiateOverheadDocument() throws FileNotFoundException, DocumentException {
+        
+        SetupDirectory(overheadDocument, "Overhead Report");
+        overheadDocument.open();
+    }
+
+    public static synchronized void addOverheadData(String formattedSeconds, String formattedMillis, String studentID, TestEnum testEnum)
+        throws FileNotFoundException, DocumentException {
+
+        Paragraph p = new Paragraph("(" + testEnum + " TEST)" + "Overhead time for " + studentID + ": " + formattedSeconds + " s " + formattedMillis + "ms\n", font);
+        overheadDocument.add(p);
+    }
+
+    public static synchronized void addOverheadComment(String comment)
+        throws FileNotFoundException, DocumentException {
+
+        Paragraph p = new Paragraph(comment + "\n\n", font);
+        overheadDocument.add(p);
+    }
+
+    public static synchronized void generateOverheadReport() {overheadDocument.close();}
 }

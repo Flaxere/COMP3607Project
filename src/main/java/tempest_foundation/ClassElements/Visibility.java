@@ -4,6 +4,5 @@ public enum Visibility {
     PRIVATE,
     PUBLIC,
     PROTECTED,
-    NONE,
- 
+    NONE
 }
