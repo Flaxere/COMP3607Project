@@ -3,7 +3,7 @@ package tempest_foundation.ClassElements;
 import java.util.ArrayList;
 
 import tempest_foundation.DocumentGenerator;
-import tempest_foundation.TestSuite;
+import tempest_foundation.Testing.TestSuite;
 import tempest_foundation.SubmissionElements.Submission;
 import tempest_foundation.Testing.SystemEvaluation;
 import tempest_foundation.Testing.TestEnum;
