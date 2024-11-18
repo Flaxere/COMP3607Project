@@ -50,17 +50,10 @@ public class DocumentGenerator {
         font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);
         Chunk chunk = new Chunk(s.getStudentId(), font);
 
-        Paragraph paragraph = new Paragraph("This is a test to see how a pdf would look with a paragraph and a chunk",font);
         chunk.append(" " + s.getGrade() + "%");
         document.add(chunk);
-        document.add(paragraph);
 
-        // Add cells to the table
-        new PdfPCell(new Paragraph("Class", font));
-        new PdfPCell(new Paragraph("Method", font));
-        new PdfPCell(new Paragraph("Method's Score", font));
-        new PdfPCell(new Paragraph("Comment", font));
-        new PdfPCell(new Paragraph("Total", font));
+        
         // Add cells to the table
        
         ArrayList <ClassDetails> classes = s.getClasses();
@@ -90,17 +83,23 @@ public class DocumentGenerator {
             document.add(headerRow);
 
             currentRow.deleteBodyRows();
+            // Add cells to the table
+            currentRow.addCell("Method");
+            currentRow.addCell("Method's Score");
+            currentRow.addCell("Comment");
+            currentRow.addCell("Total");
             for (Function f:currentClass.getFunctions()) { // Loop through methods for the current class
                 // Class Name (only shown in the first column for the first method of each class)
                 
                 currentRow.addCell(f.toString());
-                currentRow.addCell(Double.toString(f.getGrade()));
+                String grade = String.format("%.2f",f.getGrade());
+                currentRow.addCell(grade);
                 String comments="";
                 for(String comment:f.getComment())
                     comments+=comment +"\n";
                 comments=comments.strip();
                 currentRow.addCell(comments);
-                currentRow.addCell("100?");
+                currentRow.addCell("" +(int) f.getTotal());
                 // classCell.setRowspan(currentClass.getFunctions().size()); // Span across all methods for this class
                 // classCell.setVerticalAlignment(PdfPCell.ALIGN_MIDDLE);
                 // classCell.setHorizontalAlignment(PdfPCell.ALIGN_CENTER);
