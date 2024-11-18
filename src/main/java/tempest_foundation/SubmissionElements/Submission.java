@@ -17,6 +17,20 @@ public class Submission {
 
     public void addClass(ClassDetails c){classes.add(c);}
 
+    public ClassDetails getClass(String incomingClassName){
+        incomingClassName=incomingClassName.replaceAll("\\s", "");
+        incomingClassName = incomingClassName.replaceAll("[(){}]", "");
+        for(ClassDetails currentClass: classes){
+            String className = currentClass.getClassName().replaceAll("\\s", "");
+            className = className.replaceAll("[(){}]", "");
+            if(incomingClassName.equalsIgnoreCase(className)){
+                return currentClass;
+            }
+        }
+        return null;
+    }
+
+
     public ArrayList<ClassDetails> getClasses(){return classes;}
 
     public ClassDetails getClass(int num){

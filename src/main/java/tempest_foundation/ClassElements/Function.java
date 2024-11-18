@@ -80,6 +80,7 @@ public class Function extends MarkSnippet {
     public Visibility getAccessModifier(){return accessModifier;}
     public String getReturnType(){return returnType;}
     public boolean isStatic(){return isStatic;}
+    public ArrayList<Variable> getParameters(){return parameters;}
 
 
     public void setFunctionName(String functionName){this.functionName=functionName;}
@@ -209,7 +210,7 @@ public class Function extends MarkSnippet {
     public boolean equals(Object obj) {
         if (obj instanceof  Function) {
             Function f = (Function) obj;
-            if(f.getFunctionName().equals(this.getFunctionName()) && f.getReturnType().equals(this.getReturnType()) 
+            if(f.getParameters().toString().equalsIgnoreCase(this.getParameters().toString()) && f.getFunctionName().equalsIgnoreCase(this.getFunctionName()) && f.getReturnType().equalsIgnoreCase(this.getReturnType()) 
             && f.getAccessModifier().equals(this.getAccessModifier()) && f.isStatic() ==this.isStatic())
                    return true;
       }

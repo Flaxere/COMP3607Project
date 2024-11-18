@@ -13,9 +13,7 @@ public class AccessorTest implements Test {
     private Function expectedFunction;
     private double grade;
 
-    public AccessorTest(Function expectedFunction){
-        this.expectedFunction = expectedFunction;
-    }
+   
 
     public void setClassDetails(ClassDetails inTesting){
         this.inTesting=inTesting;
@@ -31,9 +29,7 @@ public class AccessorTest implements Test {
 
     @Override
     public void executeTest() {
-
-        // int numTests = expectedFunction.getContent().size();
-        // int currentTests = 0;
+       
         Function function = null;
         for (Function currentFunction: inTesting.getFunctions()) {
             if(currentFunction.equals(expectedFunction)){
@@ -48,9 +44,8 @@ public class AccessorTest implements Test {
                 .findFirst();
 
             targetFunction.ifPresent(var -> {
+
             
-            //Add mark if the accessor function prototype matches
-            // if(var.equals(function))
             f.addGrade(grade/2);
 
             //Add mark if the return statement matches
@@ -64,11 +59,13 @@ public class AccessorTest implements Test {
                 f.addGrade(grade/2);
             else
                 f.addComment(f.getFunctionName() + " did not return the correct value.");
-              
            
+            f.setTotal(grade);
+            
             });
+
         }
-        
+
     }
 
     private String extractContent(String functionDetails){
