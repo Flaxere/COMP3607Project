@@ -63,7 +63,7 @@ public class TestSuite {
         ConstructorTestExecutor(chatBot,"public static boolean limitReached()",chatBotTestStrings,3);
 
      
-        chatBotTestStrings.clear();
+        chatBotTestStrings.clear();//
         chatBotTestStrings.add("botS = new ArrayList<chatBot>();");
         ConstructorTestExecutor(chatBotPlatform,"public chatBotPlatform()", chatBotTestStrings, 2);
 
