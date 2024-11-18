@@ -11,7 +11,6 @@ public class AccessorTest implements Test {
     private ClassDetails inTesting;
     private Function expectedFunction;
     private double grade;
-
     public void setClassDetails(ClassDetails inTesting){
         this.inTesting=inTesting;
     }
@@ -26,7 +25,6 @@ public class AccessorTest implements Test {
 
     @Override
     public void executeTest() {
-
         Function function = null;
         for (Function currentFunction: inTesting.getFunctions()) {
             if(currentFunction.equals(expectedFunction)){
@@ -54,7 +52,12 @@ public class AccessorTest implements Test {
                 f.addGrade(grade/2);
             else
                 f.addComment(f.getFunctionName() + " did not return the correct value.");
+
+           
+            f.setTotal(grade);
+            
             });
+
         }
     }
 

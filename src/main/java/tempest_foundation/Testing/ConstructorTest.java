@@ -1,6 +1,7 @@
 package tempest_foundation.Testing;
 
 import java.util.ArrayList;
+import java.util.Optional;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
@@ -9,74 +10,79 @@ import tempest_foundation.ClassElements.Variable;
 public class ConstructorTest implements Test{
 
     private ClassDetails inTesting; 
-    private ArrayList<Function> expectedConstructor;
-    ArrayList<String> testStrings;
+    private Function expectedFunction;
+    private double grade=0;
 
-    public ConstructorTest(ArrayList<Function> expectedConstructor, ClassDetails inTesting, ArrayList<String> testStrings) {
-
-        this.inTesting = inTesting; 
-        this.expectedConstructor = expectedConstructor;
-        this.testStrings=testStrings;
-    }
 
     @Override
     public void setClassDetails(ClassDetails inTesting) {
         this.inTesting = inTesting;
     }
-    
-    @Override
-    public void executeTest() {
 
-        ArrayList<Function> functions = inTesting.getFunctions();
-        
-        for (Function currentFunction:functions) {
-
-            int expectedFunc = functions.indexOf(currentFunction);
-            // Function expectedFunction = functions.get(expectedFunc);
-            
-            if (expectedFunc != 1){
-                ArrayList<String> content = currentFunction.getContent();
-                double grade = 1 / testStrings.size();
-                for (String data:content) {
-                    String currentString = data.replaceAll("\\s", "");
-                    // "ChatGpt3.5-LLM"
-                    // notChatBotName=ChatGpt3.5-LLM
-                    int i=0;
-                    for(i=0;i < testStrings.size();i++){
-                        if((currentString.contains(testStrings.get(i)) 
-                        || currentString.contains(testStrings.get(i).substring(testStrings.get(i).indexOf("="), testStrings.get(i).length()))) 
-                        && currentFunction.hasVariable(new Variable("chatBotName","String"))){
-                            inTesting.addGrade(grade);
-                            testStrings.remove(i);
-                            break;
-                        }else{
-                            inTesting.addGrade(0);
-                            inTesting.addComment("The constructor was supposed to contain " + testStrings.get(i) + " as the default chatbotname.");
-                        }
-                    }
-                    // for(String str:testStrings){
-                        
-                    //     if(currentString.contains(str.replaceAll("\\s", "" )) && data.contains("chatBotName") && currentFunction.hasVariable(new Variable("chatBotName","String"))){
-                            
-                    //     }
-                    // }
-
-                    // if (data.contains("ChatGPT-3.5") && data.contains("chatBotName") && currentFunction.hasVariable(new Variable("chatBotName","String"))) {
-                    //     inTesting.addGrade(1.0);
-                    // } else {
-                    //     inTesting.addGrade(0);
-
-                    //     inTesting.addComment("The constructor was supposed to contain 'ChatGPT-3.5' as the default chatbotname.");
-                    // }
-                }
-            }
-        } 
+    public void setExpectedFunction(Function expectedFunction){
+        this.expectedFunction=expectedFunction;
     }
 
     @Override
     public void setGrade(double grade) {
-        // TODO Auto-generated method stub
-        throw new UnsupportedOperationException("Unimplemented method 'setGrade'");
+        this.grade = grade;
+    }
+    
+    @Override
+    public void executeTest() {
+
+        Function function = null;
+     
+        for (Function currentFunction: inTesting.getFunctions()) {
+        
+            if(currentFunction.equals(expectedFunction)){
+                function=currentFunction;
+                break;
+            }
+        }
+        if(function!=null){
+            Function f = function;
+            Optional<Function> targetFunction = inTesting.getFunctions().stream()
+                .filter(var -> var == f)
+                .findFirst();
+
+            targetFunction.ifPresent(var -> {
+            
+            int divisionRate = (expectedFunction.getContent().size()+1);
+            f.addGrade(grade/divisionRate);
+            
+
+            //Add mark if the return statement matches
+            int num=0;
+            ArrayList<String> expectedContent;
+            expectedContent = expectedFunction.getContent();
+            for(String currentString:var.getContent()){
+                String filteredString =currentString.replaceAll("\\s", "");
+                filteredString = filteredString.replaceAll("[(){}]", "");
+                for(int i=num;i < expectedContent.size();i++){
+                    String expectedString = expectedContent.get(i).replaceAll("\\s", "");
+                    expectedString = expectedString.replaceAll("[(){}]", "");
+                    if(filteredString.contains(expectedString)){
+                        f.addGrade(grade/divisionRate);
+                        expectedContent.remove(i);
+                        if(i>0)
+                            i--; 
+                        
+                    }
+    
+                }
+            }
+            for(int i=0;i < expectedContent.size();i++){
+                f.addComment("The inclusion of '" + expectedContent.get(i) + "' was missing from the function");
+            }
+            f.setTotal(grade);
+          });
+            
+            
+        }
+
+
+
     }
 
    
