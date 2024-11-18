@@ -1,14 +1,29 @@
 package tempest_foundation.SubmissionElements;
 
-public abstract class MarkSnippet {
-    protected int grade;
-    protected String comment;
+import java.util.ArrayList;
 
-    public void setSnippet(int grade, String comment){
-        this.grade = grade;
-        this.comment = comment;
+import tempest_foundation.ClassElements.ClassE;
+
+public abstract class MarkSnippet implements ClassE {
+    protected double grade=0.0;
+    protected ArrayList<String> comment;
+    protected double total=0;
+
+    public  MarkSnippet(){
+        this.comment = new ArrayList<>();
+    }
+    public void addGrade(double grade){
+        this.grade+=grade;
+
+    }
+    public void addComment(String comment){
+        this.comment.add(comment);
+
     }
 
-    public int getGrade(){return grade;};
-    public String getComment(){return comment;}
+    public void setTotal(Double total){this.total = total;}
+    public double getTotal(){return total;}
+
+    public double getGrade(){return grade;}
+    public ArrayList<String> getComment(){return comment;}
 }

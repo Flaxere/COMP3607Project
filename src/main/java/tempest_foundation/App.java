@@ -1,32 +1,25 @@
 package tempest_foundation;
 
-import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
-
-import org.apache.pdfbox.pdmodel.PDDocument;
-
-import com.itextpdf.text.DocumentException;
-
+import tempest_foundation.ClassElements.AutoGrader;
 import tempest_foundation.SubmissionElements.Submission;
+import tempest_foundation.Testing.SystemEvaluation;
+
 /**
- * Hello world!
+ * Hello Jura-Tempest Foundation!
+ * App class for the project
  *
  */
 public class App 
 { 
-    public static void main( String[] args ) throws IOException, DocumentException
-    {
-        
-        Map<String,Map<String,ArrayList<String>>> submissionListing= new HashMap<>();
-        FileReader f = new FileReader(submissionListing);
-       
-        DocumentGenerator d = new DocumentGenerator();
-        d.createDocument();
+    public static void main( String[] args ) throws Exception {
 
-        f.readFiles(new ArrayList<Submission>());
-        // System.out.println(submissionListing.get("816035980").get("public class ChatBot{"));
+        ArrayList<Submission> submissions = new ArrayList<>();
+        FileReader f = new FileReader();
+        f.readFiles(submissions);
+        AutoGrader grader = new AutoGrader();
+
+        grader.processAssignments(submissions);
+        SystemEvaluation.runTest();
     }
 }
