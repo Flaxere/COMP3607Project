@@ -3,15 +3,16 @@ package tempest_foundation;
 import java.util.ArrayList;
 import tempest_foundation.ClassElements.AutoGrader;
 import tempest_foundation.SubmissionElements.Submission;
+import tempest_foundation.Testing.SystemEvaluation;
 
 /**
- * Hello Jura-Tempest Federation!
+ * Hello Jura-Tempest Foundation!
+ * App class for the project
  *
  */
 public class App 
 { 
-    public static void main( String[] args ) throws Exception
-    {
+    public static void main( String[] args ) throws Exception {
 
         ArrayList<Submission> submissions = new ArrayList<>();
         FileReader f = new FileReader();
@@ -19,6 +20,6 @@ public class App
         AutoGrader grader = new AutoGrader();
 
         grader.processAssignments(submissions);
-
+        SystemEvaluation.runTest();
     }
 }
