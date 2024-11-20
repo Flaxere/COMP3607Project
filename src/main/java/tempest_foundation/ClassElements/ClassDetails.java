@@ -2,9 +2,15 @@ package tempest_foundation.ClassElements;
 
 
 import java.util.ArrayList;
+
 import tempest_foundation.SubmissionElements.MarkSnippet;
 
-
+/**
+ * The {@code ClassDetails} class represents a detailed structure of a class in a program.
+ * It extends {@link MarkSnippet} and contains information such as the class name, 
+ * variables, functions, and class content. It also provides methods for manipulation 
+ * and grading of class components.
+ */
 public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
 
     private String className;
@@ -12,6 +18,11 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
     private ArrayList<String> classContent;
     private ArrayList<Function> functions;
 
+    /**
+     * Constructs a {@code ClassDetails} object with the specified class name.
+     *
+     * @param className the name of the class
+     */
     public ClassDetails(String className) {
 
         super();
@@ -20,6 +31,14 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
         functions = new ArrayList<>();
     }
 
+    /**
+     * Constructs a {@code ClassDetails} object with the specified class name, 
+     * variables, and functions.
+     *
+     * @param className the name of the class
+     * @param variables a list of {@link Variable} objects representing class variables
+     * @param functions a list of {@link Function} objects representing class functions
+     */
     public ClassDetails(String className,ArrayList<Variable> variables,ArrayList<Function> functions ) {
 
         this.className = className;
@@ -27,22 +46,52 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
         this.functions = functions;
     }
 
+    /**
+     * Adds a function to the class.
+     *
+     * @param f the {@link Function} object to add
+     */
     public void addFunction(Function f){
         functions.add(f);
     }
 
+     /**
+     * Sets the content of the class.
+     *
+     * @param content a list of strings representing the class content
+     */
     @Override
     public void setContent(ArrayList<String> content) {
        this.classContent = content;
     }
     
+    /**
+     * Adds a line of content to the class.
+     *
+     * @param content the string content to add
+     */
     @Override
     public void addContent(String content){
         this.classContent.add(content);
     }
-
+    /**
+     * Gets the name of the class.
+     *
+     * @return the class name
+     */
     public String getClassName(){return className;}
+    /**
+     * Gets the list of variables in the class.
+     *
+     * @return a list of {@link Variable} objects
+     */
     public ArrayList<Variable> getVariables(){return variables;}
+
+     /**
+     * Gets the list of functions in the class.
+     *
+     * @return a list of {@link Function} objects
+     */
     public ArrayList<Function> getFunctions(){return functions;}
 
     @Override
@@ -50,6 +99,11 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
         return this.classContent;
     }
 
+    /**
+     * Adds a variable to the class by parsing a line of code that was read in, it adds the function name visibility.
+     *  data can be held in a list of variables
+     * @param line a string representing a variable declaration
+     */
     @Override
     public void addVariable(String line){//FIX: THis is the function jared. Just put the variable in the bag bro
         String varName = Variable.assignName(line);
@@ -62,6 +116,12 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
             variables.add(new Variable(Variable.assignName(line), Variable.assignType(line),vis)) ;
     }  
 
+     /**
+     * Extracts the class name from a given line of code.
+     *
+     * @param line a string containing the class declaration
+     * @return the name of the class
+     */
     public static String assignName(String line) {
 
         Boolean[] test = {false,false};
@@ -85,6 +145,11 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
         return newString.substring(newString.lastIndexOf(" "),newString.length());
     }
 
+    /**
+     * Calculates the total grade for the class, including grades for all functions.
+     *
+     * @return the total grade as a double
+     */
     public double getTotalGrade() {
 
         double totalGrade = getGrade();
@@ -95,6 +160,7 @@ public class ClassDetails extends MarkSnippet{//TODO: This is the CLASS class
         return totalGrade;
     }
 
+    
     public String toString() {
 
         String str = getClassName() + ":\n";

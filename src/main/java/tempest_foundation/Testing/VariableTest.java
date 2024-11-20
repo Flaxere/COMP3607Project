@@ -1,11 +1,17 @@
 package tempest_foundation.Testing;
 
-import java.util.List;
-
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Variable;
 
 
+/**
+ * The VariableTest class is responsible for testing the visibility, type, and name etc of a specific variable 
+ * within a class to ensure it matches the expected visibility specified in the test case.
+ * <p>
+ *  
+ * 
+ * </p>
+ */
 public class VariableTest implements Test {
     
     private ClassDetails inTesting;
@@ -23,6 +29,14 @@ public class VariableTest implements Test {
         this.inTesting=inTesting;
     }
 
+    /**
+     * Executes the test to check to see if variable matches with expected variable within the class.
+     * <p>
+     * The method compares the visibility of the variable found in the class to the expected visibility. 
+     * If the visibility matches, the full grade is awarded. If it doesn't match, half the grade is awarded, 
+     * and a comment is added indicating the expected visibility.
+     * </p>
+     */
     @Override
     public void executeTest() {
         
@@ -44,6 +58,11 @@ public class VariableTest implements Test {
         // }
     }
 
+     /**
+     * Sets the grade for this variable test.
+     * 
+     * @param grade the grade to assign to the test.
+     */
     @Override
     public void setGrade(double grade) {
         this.grade=grade;

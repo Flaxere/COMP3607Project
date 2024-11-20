@@ -22,6 +22,16 @@ import tempest_foundation.ClassElements.Function;
 import tempest_foundation.SubmissionElements.Submission;
 import tempest_foundation.Testing.TestEnum;
 
+
+/**
+ * The DocumentGenerator class is responsible for generating PDF reports for student submissions.
+ * These reports include details such as the student's grade, the grade for individual methods,
+ * comments, and other relevant information about the student's submission.
+ * <p>
+ * This class includes methods for generating documents for successful submissions, failed submissions,
+ * or cases where no submission was made. It also supports creating overhead reports and appending data to them.
+ * </p>
+ */
 public class DocumentGenerator {
 
     private static Font font = FontFactory.getFont(FontFactory.COURIER, 16, BaseColor.BLACK);

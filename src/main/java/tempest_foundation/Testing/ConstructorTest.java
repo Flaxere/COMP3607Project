@@ -5,8 +5,14 @@ import java.util.Optional;
 
 import tempest_foundation.ClassElements.ClassDetails;
 import tempest_foundation.ClassElements.Function;
-import tempest_foundation.ClassElements.Variable;
 
+/**
+ * A test class that checks if submission code matches the predefined criteria.
+ * <p>
+ * This class verifies that the content of a class matches the predefined content.
+ * .
+ * </p>
+ */
 public class ConstructorTest implements Test{
 
     private ClassDetails inTesting; 

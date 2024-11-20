@@ -1,14 +1,27 @@
 package tempest_foundation.ClassElements;
 
 import java.util.Arrays;
+
 import tempest_foundation.BracketManager;
 
+/**
+ * Represents a variable in a programming context, encapsulating its type,
+ * name, and access modifier. Provides utility methods for parsing variable
+ * details from code lines.
+ */
 public class Variable {
 
     private String type;
     private Visibility accessModifier;
     private String variableName;
-    
+
+
+    /**
+     * Constructs a Variable with a name and type. Access modifier defaults to NONE.
+     *
+     * @param variableName the name of the variable.
+     * @param type         the type of the variable.
+     */
     public Variable(String variableName, String type) {
 
         this.variableName = variableName;
@@ -16,6 +29,15 @@ public class Variable {
         accessModifier = Visibility.NONE;
     }
 
+    
+
+     /**
+     * Constructs a Variable with a name, type, and access modifier.
+     *
+     * @param variableName   the name of the variable.
+     * @param type           the type of the variable.
+     * @param accessModifier the access modifier of the variable.
+     */
     public Variable(String variableName, String type,Visibility accessModifier) {
 
         this.variableName = variableName;
@@ -23,7 +45,12 @@ public class Variable {
         this.accessModifier = accessModifier;
     }
 
-
+    /**
+     * Assigns a variable name from a given line of code from submission.
+     *
+     * @param line the line of code.
+     * @return the name of the variable or "0nonVariable" if no valid variable name is found.
+     */
     public static String assignName(String line) {//TODO: Account for multiple variables on the same line being separated by a ,
 
         String[] tempStrArr = line.trim().split("[\\s\\s*,\\s*]"); 
@@ -81,6 +108,12 @@ public class Variable {
         }
     }
 
+     /**
+     * Checks if a given line contains an expression instead of a variable declaration.
+     *
+     * @param line the line of code.
+     * @return true if the line contains an expression, false otherwise.
+     */
     private static boolean hasExpression(String line) {
 
         if(line.equals(""))
@@ -90,6 +123,12 @@ public class Variable {
         return false;
     }
     
+    /**
+     * Determines if a line is not a variable declaration.
+     *
+     * @param line the line of code.
+     * @return true if the line is not a variable declaration, false otherwise.
+     */
     private static boolean nonVariable(String line){
         String formattedLine = line.replace(" ","");
         
@@ -98,6 +137,12 @@ public class Variable {
         return false;
     }
     
+    /**
+     * Checks if a given line starts with a keyword that is not a variable declaration.
+     *
+     * @param line the line of code.
+     * @return true if the line starts with a keyword, false otherwise.
+     */
     private static boolean isKeyword(String line) {
         
         if(line.indexOf("do")==0||line.indexOf("while")==0||line.indexOf("for")==0||
@@ -110,6 +155,12 @@ public class Variable {
         return false;
     }
 
+    /**
+     * Assigns an access modifier from a given line of code.
+     *
+     * @param line the line of code.
+     * @return the assigned visibility.
+     */
     public static Visibility assignVisibility(String line) {
         
         if(line.contains("private"))
@@ -122,6 +173,12 @@ public class Variable {
         return Visibility.NONE;
     }
 
+    /**
+     * Assigns the type of the variable from a given line of code.
+     *
+     * @param line the line of code.
+     * @return the type of the variable or "0nonVariable" if invalid.
+     */
     public static String assignType(String line) {
 
         if(line.contains(";")!=true || line.contains("return")==true)
@@ -156,10 +213,16 @@ public class Variable {
     public String getType(){return this.type;}
     public Visibility getVisibility(){return this.accessModifier;}
 
+    /**
+     * Returns a string representation of the variable.
+     *
+     * @return a string in the format "visibility type name".
+     */
     public String toString(){
         return getVisibility() +" " + getType()+ " " + getName() ;
     }
 
+    
     public boolean equals(Object obj) {
 
         if (obj instanceof  Variable) {

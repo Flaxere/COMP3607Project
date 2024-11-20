@@ -8,6 +8,14 @@ import tempest_foundation.ClassElements.Variable;
 import tempest_foundation.ClassElements.Visibility;
 import tempest_foundation.SubmissionElements.Submission;
 
+/**
+ * The TestSuite class manages and executes various tests on a student's submission.
+ * <p>
+ * It utilizes different test types such as AccessorTest and ConstructorTest to evaluate 
+ * the correctness of methods and constructors in the student's code. The tests are applied 
+ * to specific classes and their functions or variables.
+ * </p>
+ */
 public class TestSuite {
     
     private AccessorTest accessorTest;
@@ -20,6 +28,17 @@ public class TestSuite {
 
         
     }
+
+    /**
+     * Executes a series of tests on the classes within the given student's submission.
+     * <p>
+     * The method initializes variables, sets up the classes to be tested, and runs various tests 
+     * such as variable tests, accessor method tests, and constructor tests, applying grades for 
+     * each test accordingly.
+     * </p>
+     *
+     * @param s the student's submission containing the classes to be tested.
+     */
     public void executeTests(Submission s){
         ArrayList<Variable> variables = new ArrayList<>();
         variables.add(new Variable("chatBotName", "String", Visibility.PRIVATE));

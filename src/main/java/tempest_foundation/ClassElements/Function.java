@@ -4,6 +4,13 @@ import java.util.Arrays;
 
 import tempest_foundation.BracketManager;
 import tempest_foundation.SubmissionElements.MarkSnippet;
+
+/**
+ * The {@code Function} class represents a function or method in a program.
+ * It extends {@link MarkSnippet} and contains information about the function's
+ * name, return type, visibility, parameters, variables, and content. 
+ * The class provides methods for analyzing and processing function details.
+ */
 public class Function extends MarkSnippet {
     private Visibility accessModifier;
     private String functionName;
@@ -16,7 +23,9 @@ public class Function extends MarkSnippet {
     // private boolean isStatic;
     
     
-
+     /**
+     * Constructs an empty {@code Function} object.
+     */
     public Function(){
         super();
         this.functionContent = new ArrayList<>();
@@ -24,7 +33,12 @@ public class Function extends MarkSnippet {
        this.parameters = new ArrayList<>();
        this.returnType ="";
     }
-    
+    /**
+     * Constructs a {@code Function} object with a name and access modifier.
+     *
+     * @param functionName    the name of the function
+     * @param accessModifier  the visibility of the function (e.g., public, private)
+     */
     public Function(String functionName, Visibility accessModifier){
         this.functionName = functionName;
         this.accessModifier = accessModifier;
@@ -35,6 +49,12 @@ public class Function extends MarkSnippet {
        
     }
 
+    /**
+     * Processes the parameter string to extract parameter types and names.
+     *
+     * @param line             the function declaration line
+     * @param characterFilter  an array of characters to filter brackets
+     */
     public void processParameterString(String line, char[] characterFilter ) {
         String strBetweenBrackets = null;
         strBetweenBrackets = line.substring( line.indexOf('(') + 1, line.indexOf(')'));
@@ -71,6 +91,12 @@ public class Function extends MarkSnippet {
     public void setGrade(int grade){
         this.grade = grade;
     }
+
+    /**
+     * Checks if the function is a constructor.
+     *
+     * @return {@code true} if the function is a constructor, {@code false} otherwise
+     */
     public boolean isConstructor(){return constructor;}
 
    
@@ -87,7 +113,12 @@ public class Function extends MarkSnippet {
     public void setFunctionType(String returnType){this.returnType=returnType;}
     public void setAccessModifier(Visibility accessModifier){this.accessModifier=accessModifier;}
 
-
+     /**
+     * Assigns the visibility of the function based on the provided line of code, privat public etc.
+     *
+     * @param line the function declaration line
+     * @return the {@link Visibility} of the function
+     */
     public Visibility assignVisibility(String line){
         String[] tempStrArr = line.trim().split("[\\s\\s*,\\s*]"); 
         if(tempStrArr[0].equals("private"))
@@ -99,7 +130,11 @@ public class Function extends MarkSnippet {
         return Visibility.NONE;
     }
 
-
+     /**
+     * Processes and extracts the details of the function from the provided line.
+     *
+     * @param line the function declaration line
+     */
     public void processFunctionDetails(String line){
         char[] characterFilter = {'<','>','[',']'};
         processParameterString(line,characterFilter);
@@ -183,6 +218,12 @@ public class Function extends MarkSnippet {
         return this.functionContent;
     }
 
+    /**
+     * Checks if the function contains the expected/correct variable.
+     *
+     * @param v the {@link Variable} to check
+     * @return {@code true} if the variable exists, {@code false} otherwise
+     */
     public Boolean hasVariable(Variable v) {
         for(Variable var:variables){
             if(var.equals(v)){
@@ -193,6 +234,12 @@ public class Function extends MarkSnippet {
         return false;
     }
 
+     /**
+     * Returns a string representation of the function, including its name,
+     * parameters, return type, and visibility.
+     *
+     * @return a string representing the function
+     */
     public String toString() {
 
         String str=accessModifier + " ";
@@ -209,6 +256,12 @@ public class Function extends MarkSnippet {
         return str;
     }
 
+    /**
+     * Checks if the specified object is equal to this function.
+     *
+     * @param obj the object to compare
+     * @return {@code true} if the objects are equal, {@code false} otherwise
+     */
     public boolean equals(Object obj) {
 
         if (obj instanceof  Function) {
